@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLocale, t, localePath } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
+---
+<BaseLayout title={t(locale, 'site.tagline')} heroNav={true} locale={locale}>
+
+  <!-- Hero -->
+  <section class="hero-gradient" style="position:relative;min-height:80vh;display:flex;align-items:center;padding-top:var(--nav-height);">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%, rgba(224,112,32,0.10) 0%, transparent 60%);"></div>
+    <div class="container" style="position:relative;padding-top:80px;padding-bottom:80px;">
+      <div class="hero-eyebrow">finances.jimmy.vip</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(40px,7vw,80px);font-weight:700;line-height:1.05;letter-spacing:-1px;color:#fff;max-width:700px;margin-bottom:24px;text-transform:uppercase;">
+        你的錢，<span style="color:var(--color-accent);">算清楚</span>再決定
+      </h1>
+      <p class="hero-desc" style="font-size:16px;font-weight:300;color:rgba(255,255,255,0.65);max-width:480px;line-height:1.75;margin-bottom:40px;">
+        {t(locale, 'site.tagline')}。房貸、退休金、薪資稅後——數字說清楚，決定才明智。
+      </p>
+      <div class="hero-actions">
+        <a href={localePath(locale, '/mortgage/calculator/')} class="btn-primary">{t(locale, 'nav.cta')}</a>
+        <a href={localePath(locale, '/blog/')} class="btn-secondary">{t(locale, 'nav.blog')}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool Cards -->
+  <section class="section" style="background:var(--color-bg);padding:64px 0;">
+    <div class="container">
+      <div class="section-label">核心工具</div>
+      <div class="section-title" style="margin-bottom:40px;">三大試算工具</div>
+      <div class="tool-cards">
+
+        <!-- 房貸 -->
+        <a href={localePath(locale, '/mortgage/')} class="tool-card">
+          <span class="tool-icon">🏠</span>
+          <h3>{t(locale, 'nav.mortgage')}</h3>
+          <p>輸入貸款金額、利率、年期，立即算出每月還款、總利息、本利比。支援提前還款試算與多方案比較。</p>
+          <span class="tool-card-link">開始試算 →</span>
+        </a>
+
+        <!-- 退休金 -->
+        <a href={localePath(locale, '/retirement/')} class="tool-card">
+          <span class="tool-icon">🌅</span>
+          <h3>{t(locale, 'nav.retirement')}</h3>
+          <p>設定目標退休年齡與生活水準，算出每月需存多少錢、現有資產缺口，讓退休計畫有數字依據。</p>
+          <span class="tool-card-link">開始試算 →</span>
+        </a>
+
+        <!-- 薪資 -->
+        <a href={localePath(locale, '/salary/')} class="tool-card">
+          <span class="tool-icon">💼</span>
+          <h3>{t(locale, 'nav.salary')}</h3>
+          <p>計算薪資扣除勞健保後的實拿金額、個人所得稅、加班費，換工作前先把數字算清楚。</p>
+          <span class="tool-card-link">開始試算 →</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Tagline Section -->
+  <section style="background:var(--color-dark-bg);padding:80px 0;border-top:0.5px solid #111;">
+    <div class="container" style="text-align:center;">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--color-accent);margin-bottom:20px;">我們的立場</div>
+      <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;text-transform:uppercase;letter-spacing:-0.5px;color:#fff;margin-bottom:16px;max-width:640px;margin-left:auto;margin-right:auto;">
+        不賣金融商品<br/>只幫你把數字算清楚
+      </h2>
+      <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.45);max-width:440px;margin:0 auto 40px;line-height:1.7;">
+        {t(locale, 'footer.disclaimer')}
+      </p>
+      <a href={localePath(locale, '/about/')} style="font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);text-decoration:none;border-bottom:0.5px solid var(--color-accent);padding-bottom:2px;">
+        了解更多 →
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background:var(--color-accent);padding:64px 0;">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:36px;font-weight:700;text-transform:uppercase;letter-spacing:-0.5px;color:#fff;margin-bottom:8px;">準備好試算了嗎？</h2>
+        <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.8);">免費、無廣告、不需要註冊帳號。</p>
+      </div>
+      <a href={localePath(locale, '/mortgage/calculator/')} style="background:#fff;color:var(--color-accent);padding:16px 40px;font-size:14px;font-weight:500;text-decoration:none;transition:opacity 120ms;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+        {t(locale, 'nav.cta')}
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

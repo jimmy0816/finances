@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLocale } from '../i18n/utils';
+const locale = getLocale(Astro.url);
+---
+<BaseLayout title="關於算清楚" locale={locale}>
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">關於我們</div>
+      <h1>關於算清楚</h1>
+      <p>台灣最好用的金融試算工具。不賣金融商品，只幫你把數字算清楚。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="content-container">
+      <div class="about-content">
+        <h2>我們的理念</h2>
+        <p>
+          算清楚（finances.jimmy.vip）是一個獨立的金融試算工具網站。我們相信，做出正確的金融決策，首先需要看懂數字。
+        </p>
+        <p>
+          台灣的金融服務業通常把計算工具藏在後面，讓你必須先聯繫理專、填表格、預約，才能知道自己的房貸每月要還多少。
+          我們認為這是不對的。數字應該透明、容易取得，讓你能獨立思考再做決定。
+        </p>
+
+        <h2>我們做什麼</h2>
+        <ul>
+          <li>🏠 <strong>房貸試算</strong> — 月付金、總利息、本利比、提前還款試算</li>
+          <li>🌅 <strong>退休規劃</strong> — 退休資金需求、每月儲蓄目標、資產缺口分析</li>
+          <li>💼 <strong>薪資計算</strong> — 稅後薪資、勞健保扣額、加班費計算</li>
+          <li>📚 <strong>知識庫</strong> — 台灣金融常識、計算教學、理財觀念</li>
+        </ul>
+
+        <h2>重要聲明</h2>
+        <p>
+          本站所有計算結果僅供參考，不構成任何金融建議或投資建議。實際金額請以各銀行、政府機關的正式核算為準。
+          如有重大財務決策，請諮詢持照的財務規劃師或相關專業人士。
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,20 @@
+{
+  "site.name": "算清楚",
+  "site.tagline": "台灣最好用的金融試算工具",
+  "nav.mortgage": "房貸試算",
+  "nav.retirement": "退休金",
+  "nav.salary": "薪資計算",
+  "nav.blog": "知識庫",
+  "nav.cta": "開始試算",
+  "footer.disclaimer": "本站計算結果僅供參考，不構成任何金融建議。實際金額請以銀行/政府機關核算為準。",
+  "footer.copyright": "© 2026 算清楚 finances.jimmy.vip",
+  "footer.tagline": "不賣金融商品，只幫你把數字算清楚",
+  "common.calculate": "開始計算",
+  "common.reset": "重置",
+  "common.result": "計算結果",
+  "common.perMonth": "每月",
+  "common.total": "總計",
+  "common.year": "年",
+  "common.month": "月",
+  "common.dollar": "元"
+}

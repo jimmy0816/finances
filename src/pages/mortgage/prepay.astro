@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocale } from '../../i18n/utils';
+const locale = getLocale(Astro.url);
+---
+<BaseLayout title="提前還款試算" locale={locale}>
+  <div style="background:var(--color-bg-card);border-bottom:0.5px solid var(--color-border);padding:48px 0;">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">房貸試算</div>
+      <h1 style="font-size:32px;font-weight:400;letter-spacing:-0.5px;color:var(--color-text-primary);margin-bottom:8px;">提前還款試算</h1>
+      <p style="font-size:14px;color:var(--color-text-secondary);font-weight:300;">即將推出 — 計算提前還款可節省的利息與縮短年期。</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="calc-container" style="padding:48px;text-align:center;">
+        <span style="font-size:48px;display:block;margin-bottom:16px;">⏩</span>
+        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">提前還款計算器</h2>
+        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">此功能即將推出。輸入目前餘額與提前還款金額，計算可省下多少利息。</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

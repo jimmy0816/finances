@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocale } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const locale = getLocale(Astro.url);
+const { Content } = await post.render();
+---
+<BaseLayout title={post.data.title} description={post.data.description} locale={locale}>
+  <section class="article-hero">
+    <div class="content-container">
+      <div class="article-meta">
+        {post.data.category && <span>{post.data.category}</span>}
+        <span> · </span>
+        <span>{post.data.pubDate.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <span> · {post.data.author}</span>
+      </div>
+      <h1>{post.data.title}</h1>
+      <p class="article-hero-desc">{post.data.description}</p>
+    </div>
+  </section>
+  <section class="article-content">
+    <div class="content-container">
+      <Content />
+    </div>
+  </section>
+</BaseLayout>

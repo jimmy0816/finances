@@ -1,0 +1,20 @@
+{
+  "site.name": "算クリア",
+  "site.tagline": "スマート金融計算ツール",
+  "nav.mortgage": "住宅ローン",
+  "nav.retirement": "退職金",
+  "nav.salary": "給与計算",
+  "nav.blog": "ブログ",
+  "nav.cta": "計算する",
+  "footer.disclaimer": "計算結果は参考情報であり、金融アドバイスを構成するものではありません。",
+  "footer.copyright": "© 2026 算クリア finances.jimmy.vip",
+  "footer.tagline": "金融商品を販売しません。正確な数字をお届けします。",
+  "common.calculate": "計算する",
+  "common.reset": "リセット",
+  "common.result": "計算結果",
+  "common.perMonth": "月額",
+  "common.total": "合計",
+  "common.year": "年",
+  "common.month": "月",
+  "common.dollar": "円"
+}

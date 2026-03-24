@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocale, t, localePath } from '../../i18n/utils';
+const locale = getLocale(Astro.url);
+---
+<BaseLayout title={t(locale, 'nav.mortgage')} locale={locale}>
+  <section class="page-hero">
+    <div class="container">
+      <div class="hero-eyebrow" style="color:var(--color-accent);font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;">房貸試算</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Mortgage Calculator</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:480px;line-height:1.7;">房貸試算工具即將推出。幫你算清楚每月還款、總利息與本利比。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <a href={localePath(locale, '/mortgage/calculator/')} class="tool-card" style="border-right:0.5px solid var(--color-border);">
+          <span class="tool-icon">🧮</span>
+          <h3>房貸試算計算器</h3>
+          <p>輸入貸款金額、利率、年期，立即計算每月還款與總利息。</p>
+          <span class="tool-card-link">即將推出</span>
+        </a>
+        <a href={localePath(locale, '/mortgage/prepay/')} class="tool-card" style="border-right:0.5px solid var(--color-border);">
+          <span class="tool-icon">⏩</span>
+          <h3>提前還款試算</h3>
+          <p>計算提前還款可以省多少利息，以及最佳還款策略。</p>
+          <span class="tool-card-link">即將推出</span>
+        </a>
+        <a href={localePath(locale, '/mortgage/compare/')} class="tool-card">
+          <span class="tool-icon">📊</span>
+          <h3>利率比較</h3>
+          <p>比較不同銀行利率方案，找出最划算的選擇。</p>
+          <span class="tool-card-link">即將推出</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

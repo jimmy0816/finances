@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+import { getLocale, t, localePath } from '../i18n/utils';
+
+interface Props {
+  title: string;
+  description?: string;
+  heroNav?: boolean;
+  locale?: string;
+}
+
+const url = Astro.url;
+const locale = Astro.props.locale || getLocale(url);
+const { title, description = t(locale, 'site.tagline'), heroNav = false } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang={locale === 'zh-TW' ? 'zh-TW' : locale}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | {t(locale, 'site.name')}</title>
+  <meta name="description" content={description} />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class={`site-nav${heroNav ? '' : ' solid'}`}>
+    <div class="container">
+      <a href={localePath(locale, '/')} class="nav-logo">{locale === 'zh-TW' ? '算清' : 'Fin'}<em>{locale === 'zh-TW' ? '楚' : 'Clear'}</em></a>
+      <div class="nav-links">
+        <a href={localePath(locale, '/mortgage/')}>{t(locale, 'nav.mortgage')}</a>
+        <a href={localePath(locale, '/retirement/')}>{t(locale, 'nav.retirement')}</a>
+        <a href={localePath(locale, '/salary/')}>{t(locale, 'nav.salary')}</a>
+        <a href={localePath(locale, '/blog/')}>{t(locale, 'nav.blog')}</a>
+      </div>
+      <a href={localePath(locale, '/mortgage/calculator/')} class="nav-cta-btn">{t(locale, 'nav.cta')}</a>
+    </div>
+  </nav>
+  <main>
+    <slot />
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding:48px;">
+      <div>
+        <div class="footer-logo">{locale === 'zh-TW' ? '算清' : 'Fin'}<em>{locale === 'zh-TW' ? '楚' : 'Clear'}</em></div>
+        <div class="footer-tagline">{t(locale, 'footer.tagline')}</div>
+      </div>
+      <div class="footer-col">
+        <span class="footer-col-title">{t(locale, 'nav.mortgage')}</span>
+        <a href={localePath(locale, '/mortgage/calculator/')}>計算器</a>
+        <a href={localePath(locale, '/mortgage/prepay/')}>提前還款</a>
+        <a href={localePath(locale, '/mortgage/compare/')}>利率比較</a>
+      </div>
+      <div class="footer-col">
+        <span class="footer-col-title">{t(locale, 'nav.retirement')}</span>
+        <a href={localePath(locale, '/retirement/')}>退休試算</a>
+        <a href={localePath(locale, '/retirement/gap/')}>缺口計算</a>
+      </div>
+      <div class="footer-col">
+        <span class="footer-col-title">{t(locale, 'nav.salary')}</span>
+        <a href={localePath(locale, '/salary/')}>稅後薪資</a>
+        <a href={localePath(locale, '/salary/overtime/')}>加班費</a>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>{t(locale, 'footer.copyright')}</span>
+      <span class="footer-bottom-tag" style="font-family:var(--font-mono);font-size:11px;color:var(--color-dark-text-muted);">{t(locale, 'footer.disclaimer')}</span>
+    </div>
+  </footer>
+</body>
+</html>

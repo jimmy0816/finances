@@ -1,0 +1,20 @@
+{
+  "site.name": "FinClear",
+  "site.tagline": "Smart Financial Calculators",
+  "nav.mortgage": "Mortgage",
+  "nav.retirement": "Retirement",
+  "nav.salary": "Salary",
+  "nav.blog": "Blog",
+  "nav.cta": "Start Calculating",
+  "footer.disclaimer": "Results are for reference only and do not constitute financial advice.",
+  "footer.copyright": "© 2026 FinClear finances.jimmy.vip",
+  "footer.tagline": "We don't sell financial products. We help you get the numbers right.",
+  "common.calculate": "Calculate",
+  "common.reset": "Reset",
+  "common.result": "Results",
+  "common.perMonth": "per month",
+  "common.total": "Total",
+  "common.year": "year",
+  "common.month": "month",
+  "common.dollar": ""
+}

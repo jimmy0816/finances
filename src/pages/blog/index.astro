@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocale, t } from '../../i18n/utils';
+const locale = getLocale(Astro.url);
+---
+<BaseLayout title={t(locale, 'nav.blog')} locale={locale}>
+  <section class="blog-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">知識庫</div>
+      <h1>{t(locale, 'nav.blog')}</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:480px;line-height:1.7;margin-top:16px;">金融知識、試算教學、台灣理財指南。不賣金融商品，只幫你搞懂數字。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div style="padding:48px;text-align:center;border:0.5px solid var(--color-border);background:var(--color-bg-card);">
+        <span style="font-size:48px;display:block;margin-bottom:16px;">📚</span>
+        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">文章即將上線</h2>
+        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">知識庫文章正在準備中，涵蓋房貸、退休規劃、薪資稅務等主題。</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
