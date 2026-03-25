@@ -1,23 +1,66 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PrepayCalculator from '../../components/calculators/PrepayCalculator';
 import { getLocale } from '../../i18n/utils';
 const locale = getLocale(Astro.url);
 ---
-<BaseLayout title="提前還款試算" locale={locale}>
-  <div style="background:var(--color-bg-card);border-bottom:0.5px solid var(--color-border);padding:48px 0;">
-    <div class="container">
-      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">房貸試算</div>
-      <h1 style="font-size:32px;font-weight:400;letter-spacing:-0.5px;color:var(--color-text-primary);margin-bottom:8px;">提前還款試算</h1>
-      <p style="font-size:14px;color:var(--color-text-secondary);font-weight:300;">即將推出 — 計算提前還款可節省的利息與縮短年期。</p>
-    </div>
+<BaseLayout
+  title="提前還款試算 — 算清楚省下多少利息"
+  description="輸入貸款金額、年利率、已還年數與提前還款金額，即時計算能節省多少利息、縮短幾年還款期。支援縮短年期與降低月付兩種模式。"
+  locale={locale}
+>
+  <div class="page-header" style="padding:48px 40px 40px;border-bottom:0.5px solid #E8DDD0;">
+    <a href="/mortgage/" style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);text-decoration:none;display:inline-block;margin-bottom:16px;">
+      ← 房貸工具
+    </a>
+    <h1 style="font-family:var(--font-display);font-size:40px;font-weight:300;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;">
+      提前還款試算
+    </h1>
+    <p style="font-size:15px;color:#8A7E72;line-height:1.7;max-width:560px;font-weight:300;">
+      一筆提前還款，能省下多少利息？縮短幾年？還是降低每月壓力？
+      輸入你的貸款資訊，馬上算清楚哪種做法最有效益。
+    </p>
   </div>
-  <section class="section">
-    <div class="container">
-      <div class="calc-container" style="padding:48px;text-align:center;">
-        <span style="font-size:48px;display:block;margin-bottom:16px;">⏩</span>
-        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">提前還款計算器</h2>
-        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">此功能即將推出。輸入目前餘額與提前還款金額，計算可省下多少利息。</p>
+
+  <div style="padding:40px;max-width:1080px;margin:0 auto;">
+    <PrepayCalculator client:load />
+  </div>
+
+  <!-- 補充說明 -->
+  <div style="padding:48px 40px;border-top:0.5px solid var(--color-border);background:var(--color-bg-card);">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 style="font-size:18px;font-weight:400;color:var(--color-text-primary);margin-bottom:20px;padding-left:16px;border-left:3px solid var(--color-accent);">
+        提前還款怎麼選？
+      </h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:10px;">⏩</div>
+          <h3 style="font-size:14px;font-weight:500;margin-bottom:8px;">縮短年期</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            月付不變，還款期縮短。省下的利息最多，適合收入穩定、想盡快還清的人。
+          </p>
+        </div>
+        <div style="padding:24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:10px;">📉</div>
+          <h3 style="font-size:14px;font-weight:500;margin-bottom:8px;">降低月付</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            年期不變，每月壓力減輕。適合現金流有壓力、需要月付彈性的人。省下利息略少於縮短年期。
+          </p>
+        </div>
+      </div>
+
+      <div style="margin-top:32px;padding:16px 20px;background:var(--color-accent-bg);border-left:3px solid var(--color-accent);font-size:13px;color:var(--color-text-primary);line-height:1.75;">
+        💡 <strong>提前還款時機</strong>：貸款初期（前 1/3）還款中利息佔比最高，此時提前還款效益最大。貸款後期本金已大量攤還，提前還款的節息效果相對有限。
       </div>
     </div>
-  </section>
+  </div>
+
+  <!-- 免責聲明 -->
+  <div style="padding:24px 40px;border-top:0.5px solid var(--color-border);background:var(--color-bg);">
+    <p style="font-size:11px;color:var(--color-text-muted);line-height:1.7;max-width:760px;margin:0 auto;font-family:var(--font-mono);letter-spacing:0.3px;">
+      ⚠️ 免責聲明：本計算器以等額本息（本息均攤）計算為基礎，僅供教育與參考用途。
+      實際貸款條件、提前還款違約金規定、利率計算方式等，依各銀行合約為準。
+      任何財務決策前，請諮詢您的貸款銀行或專業財務顧問。
+    </p>
+  </div>
 </BaseLayout>

@@ -1,23 +1,65 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AffordabilityCalculator from '../../components/calculators/AffordabilityCalculator';
 import { getLocale } from '../../i18n/utils';
 const locale = getLocale(Astro.url);
 ---
-<BaseLayout title="買房負擔能力試算" locale={locale}>
-  <div style="background:var(--color-bg-card);border-bottom:0.5px solid var(--color-border);padding:48px 0;">
-    <div class="container">
-      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">房貸試算</div>
-      <h1 style="font-size:32px;font-weight:400;letter-spacing:-0.5px;color:var(--color-text-primary);margin-bottom:8px;">買房負擔能力試算</h1>
-      <p style="font-size:14px;color:var(--color-text-secondary);font-weight:300;">即將推出 — 根據收入計算你能負擔多少的房屋總價。</p>
-    </div>
+<BaseLayout
+  title="購屋能力評估 — 算清楚你能買多貴的房"
+  description="根據家庭月收入、固定支出與自備款，反推你最多可以負擔多少貸款、買多貴的房子，並提供還款壓力安全指標。"
+  locale={locale}
+>
+  <div class="page-header" style="padding:48px 40px 40px;border-bottom:0.5px solid #E8DDD0;">
+    <a href="/mortgage/" style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);text-decoration:none;display:inline-block;margin-bottom:16px;">
+      ← 房貸工具
+    </a>
+    <h1 style="font-family:var(--font-display);font-size:40px;font-weight:300;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;">
+      購屋能力評估
+    </h1>
+    <p style="font-size:15px;color:#8A7E72;line-height:1.7;max-width:560px;font-weight:300;">
+      先算清楚自己能買多少，再去看房。
+      根據你的月收入與支出，反推最大貸款額度與可負擔總價，並標示還款壓力是否健康。
+    </p>
   </div>
-  <section class="section">
-    <div class="container">
-      <div class="calc-container" style="padding:48px;text-align:center;">
-        <span style="font-size:48px;display:block;margin-bottom:16px;">💰</span>
-        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">買房負擔能力</h2>
-        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">此功能即將推出。根據月收入、頭期款與負債比，計算合理的購屋預算。</p>
+
+  <div style="padding:40px;max-width:1080px;margin:0 auto;">
+    <AffordabilityCalculator client:load />
+  </div>
+
+  <!-- 補充說明 -->
+  <div style="padding:48px 40px;border-top:0.5px solid var(--color-border);background:var(--color-bg-card);">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 style="font-size:18px;font-weight:400;color:var(--color-text-primary);margin-bottom:20px;padding-left:16px;border-left:3px solid var(--color-accent);">
+        怎麼計算「能買多少」？
+      </h2>
+      <div style="font-size:14px;color:var(--color-text-primary);font-weight:300;line-height:1.8;">
+        <p style="margin-bottom:12px;">
+          本計算器採用「月付反推貸款」的方式：
+        </p>
+        <ol style="margin-left:20px;margin-bottom:20px;">
+          <li style="margin-bottom:8px;"><strong>可用月付</strong> ＝（月收入 − 月支出）× 還款上限比例</li>
+          <li style="margin-bottom:8px;"><strong>最大貸款</strong>：用本息均攤公式，從可用月付反推最大可借金額</li>
+          <li style="margin-bottom:8px;"><strong>可負擔房價</strong> ＝ 最大貸款 ＋ 自備款</li>
+        </ol>
+        <p style="color:var(--color-text-secondary);font-size:13px;">
+          銀行通常以「月付 ÷ 月收入 ≤ 40%」作為放款標準；理財建議一般以 30–33% 為健康上限。
+          調整「月還款佔收入上限比例」滑桿，可以看不同保守程度下的負擔能力。
+        </p>
+      </div>
+
+      <div style="margin-top:24px;padding:16px 20px;background:var(--color-accent-bg);border-left:3px solid var(--color-accent);font-size:13px;color:var(--color-text-primary);line-height:1.75;">
+        💡 <strong>注意</strong>：銀行核貸金額還受到信用評分、職業穩定度、其他負債、房屋鑑價等因素影響。
+        本計算器的結果僅為理論上限，實際授貸金額以銀行核定為準。
       </div>
     </div>
-  </section>
+  </div>
+
+  <!-- 免責聲明 -->
+  <div style="padding:24px 40px;border-top:0.5px solid var(--color-border);background:var(--color-bg);">
+    <p style="font-size:11px;color:var(--color-text-muted);line-height:1.7;max-width:760px;margin:0 auto;font-family:var(--font-mono);letter-spacing:0.3px;">
+      ⚠️ 免責聲明：本計算器以等額本息（本息均攤）試算，結果僅供參考與教育用途。
+      實際可貸金額、核貸條件、利率水準等依各銀行規定及個人信用狀況而異。
+      本工具不構成任何財務建議。購屋前請諮詢專業貸款顧問或銀行理專。
+    </p>
+  </div>
 </BaseLayout>
