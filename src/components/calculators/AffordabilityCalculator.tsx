@@ -6,7 +6,7 @@ const fmt = (n: number) =>
 
 const fmtWan = (n: number) => {
   const wan = n / 10000;
-  if (wan >= 100) return `${(wan / 100).toFixed(1)} 億`;
+  if (wan >= 10000) return `${(wan / 10000).toFixed(1)} 億`;
   return `${wan.toFixed(1)} 萬`;
 };
 
