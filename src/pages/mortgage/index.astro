@@ -3,35 +3,88 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getLocale, t, localePath } from '../../i18n/utils';
 const locale = getLocale(Astro.url);
 ---
-<BaseLayout title={t(locale, 'nav.mortgage')} locale={locale}>
+<BaseLayout title="房貸計算器" description="房貸試算工具集：月付試算、提前還款分析、購屋能力評估，幫你算清楚每一分錢。" locale={locale}>
+  <!-- Page Hero -->
   <section class="page-hero">
     <div class="container">
-      <div class="hero-eyebrow" style="color:var(--color-accent);font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;">房貸試算</div>
-      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Mortgage Calculator</h1>
-      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:480px;line-height:1.7;">房貸試算工具即將推出。幫你算清楚每月還款、總利息與本利比。</p>
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">房貸試算工具</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Mortgage Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:520px;line-height:1.7;">
+        三個工具，把房貸算清楚。月付多少、提前還值不值、買多貴才不過頭，全在這裡算。
+      </p>
     </div>
   </section>
-  <section class="section">
+
+  <!-- Calculator Cards -->
+  <section style="padding:64px 0;background:var(--color-bg);">
     <div class="container">
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:32px;">計算器工具</div>
+      <div class="tool-cards">
+        <!-- 月付試算 -->
         <a href={localePath(locale, '/mortgage/calculator/')} class="tool-card" style="border-right:0.5px solid var(--color-border);">
           <span class="tool-icon">🧮</span>
-          <h3>房貸試算計算器</h3>
-          <p>輸入貸款金額、利率、年期，立即計算每月還款與總利息。</p>
-          <span class="tool-card-link">即將推出</span>
+          <h3>房貸月付試算</h3>
+          <p>輸入貸款金額、年利率、年期與還款方式，立即計算每月還款金額、總利息，並提供視覺化攤還明細表。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">本息均攤</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">本金均攤</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">寬限期</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">立即試算 →</span>
         </a>
+
+        <!-- 提前還款 -->
         <a href={localePath(locale, '/mortgage/prepay/')} class="tool-card" style="border-right:0.5px solid var(--color-border);">
           <span class="tool-icon">⏩</span>
           <h3>提前還款試算</h3>
-          <p>計算提前還款可以省多少利息，以及最佳還款策略。</p>
-          <span class="tool-card-link">即將推出</span>
+          <p>計算提前一筆還款能節省多少利息，以及縮短幾年還款期，幫你做出最有效益的還款決策。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:#F5EDE1;color:#8A7E72;padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">即將推出</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;color:var(--color-text-muted);">敬請期待</span>
         </a>
-        <a href={localePath(locale, '/mortgage/compare/')} class="tool-card">
-          <span class="tool-icon">📊</span>
-          <h3>利率比較</h3>
-          <p>比較不同銀行利率方案，找出最划算的選擇。</p>
-          <span class="tool-card-link">即將推出</span>
+
+        <!-- 購屋能力 -->
+        <a href={localePath(locale, '/mortgage/affordability/')} class="tool-card">
+          <span class="tool-icon">🏠</span>
+          <h3>購屋能力評估</h3>
+          <p>根據收入與支出，計算你最多能負擔多少房貸，以及建議的購屋總價上限。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:#F5EDE1;color:#8A7E72;padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">即將推出</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;color:var(--color-text-muted);">敬請期待</span>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">常見觀念</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;letter-spacing:-0.5px;">房貸前，先搞懂這三件事</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📐</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">本息均攤 vs 本金均攤</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            本息均攤每月固定還款，前期利息佔比高；本金均攤每月本金相同，月付遞減，總利息較少但初期壓力較大。
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⏳</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">寬限期的代價</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            寬限期內只付利息、本金不減，看似輕鬆，但結束後月付金額大幅增加，總利息也會增加。
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">💡</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">利率每 0.1% 的差距</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            以 1000 萬 30 年期貸款，年利率差 0.1% 約影響月付 500–600 元、總利息差近 18 萬元。利率值得多比較。
+          </p>
+        </div>
       </div>
     </div>
   </section>

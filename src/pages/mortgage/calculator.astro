@@ -1,23 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getLocale, t } from '../../i18n/utils';
-const locale = getLocale(Astro.url);
+import MortgageCalculator from '../../components/calculators/MortgageCalculator';
 ---
-<BaseLayout title="房貸試算計算器" locale={locale}>
-  <div style="background:var(--color-bg-card);border-bottom:0.5px solid var(--color-border);padding:48px 0;">
-    <div class="container">
-      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">房貸試算</div>
-      <h1 style="font-size:32px;font-weight:400;letter-spacing:-0.5px;color:var(--color-text-primary);margin-bottom:8px;">房貸試算計算器</h1>
-      <p style="font-size:14px;color:var(--color-text-secondary);font-weight:300;">即將推出 — 計算器正在開發中，敬請期待。</p>
-    </div>
+<BaseLayout title="房貸試算計算器" description="免費房貸月付試算，支援本息均攤、本金均攤、寬限期計算，含攤還明細表和圖表。">
+  <div class="page-header" style="padding:48px 40px 40px;border-bottom:0.5px solid #E8DDD0;">
+    <h1 style="font-family:var(--font-display);font-size:40px;font-weight:300;text-transform:uppercase;letter-spacing:2px;">房貸試算</h1>
+    <p style="font-size:15px;color:#8A7E72;line-height:1.7;max-width:520px;font-weight:300;margin-top:12px;">輸入貸款條件，立即算出每月還款金額、總利息、攤還明細。</p>
   </div>
-  <section class="section">
-    <div class="container">
-      <div class="calc-container" style="padding:48px;text-align:center;">
-        <span style="font-size:48px;display:block;margin-bottom:16px;">🏠</span>
-        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">房貸試算計算器</h2>
-        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">此功能即將推出。計算器將支援本金平均攤還法、本利平均攤還法，並提供每月還款明細表。</p>
-      </div>
-    </div>
-  </section>
+  <div style="padding:40px;max-width:1080px;margin:0 auto;">
+    <MortgageCalculator client:load />
+  </div>
 </BaseLayout>
