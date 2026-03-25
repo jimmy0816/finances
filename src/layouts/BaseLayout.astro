@@ -12,6 +12,14 @@ interface Props {
 const url = Astro.url;
 const locale = Astro.props.locale || getLocale(url);
 const { title, description = t(locale, 'site.tagline'), heroNav = false } = Astro.props;
+
+// Language switcher: get current path without locale prefix
+const pathWithoutLocale = url.pathname.replace(/^\/(en|ja)/, '') || '/';
+const langOptions = [
+  { code: 'zh-TW', label: '中文', path: pathWithoutLocale },
+  { code: 'en', label: 'EN', path: `/en${pathWithoutLocale}` },
+  { code: 'ja', label: '日本語', path: `/ja${pathWithoutLocale}` },
+];
 ---
 <!DOCTYPE html>
 <html lang={locale === 'zh-TW' ? 'zh-TW' : locale}>
@@ -34,6 +42,14 @@ const { title, description = t(locale, 'site.tagline'), heroNav = false } = Astr
         <a href={localePath(locale, '/retirement/')}>{t(locale, 'nav.retirement')}</a>
         <a href={localePath(locale, '/salary/')}>{t(locale, 'nav.salary')}</a>
         <a href={localePath(locale, '/blog/')}>{t(locale, 'nav.blog')}</a>
+      </div>
+      <div class="lang-switcher">
+        {langOptions.map((lang) => (
+          <a
+            href={lang.path}
+            class:list={['lang-btn', { active: lang.code === locale }]}
+          >{lang.label}</a>
+        ))}
       </div>
       <a href={localePath(locale, '/mortgage/calculator/')} class="nav-cta-btn">{t(locale, 'nav.cta')}</a>
     </div>

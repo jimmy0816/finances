@@ -153,6 +153,27 @@ img { display: block; max-width: 100%; }
 
 .nav-links a:hover { opacity: 0.6; text-decoration: none; }
 
+/* Language switcher */
+.lang-switcher {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+.lang-btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  border-radius: 3px;
+  transition: all 150ms ease;
+}
+.lang-btn:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
+.lang-btn.active { color: #fff; background: rgba(255,255,255,0.15); font-weight: 500; }
+.site-nav.solid .lang-btn { color: var(--color-text-muted); }
+.site-nav.solid .lang-btn:hover { color: var(--color-text-primary); background: var(--color-bg-card); }
+.site-nav.solid .lang-btn.active { color: var(--color-accent); background: var(--color-bg-card); }
+
 /* Transparent-overlay nav CTA (heroNav) */
 .nav-cta-btn {
   background: rgba(255,255,255,0.12);
