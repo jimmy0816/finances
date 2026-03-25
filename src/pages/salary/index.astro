@@ -1,22 +1,105 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getLocale, t } from '../../i18n/utils';
+import SalaryCalculator from '../../components/calculators/SalaryCalculator';
+import OvertimeCalculator from '../../components/calculators/OvertimeCalculator';
 const locale = getLocale(Astro.url);
 ---
-<BaseLayout title={t(locale, 'nav.salary')} locale={locale}>
-  <div style="background:var(--color-bg-card);border-bottom:0.5px solid var(--color-border);padding:48px 0;">
+<BaseLayout title="薪資試算 2026｜稅後實拿 + 加班費計算器" description="台灣薪資計算工具：含 2026 年最新勞保費率、健保費率、所得稅預扣，一鍵算出每月實拿薪資。加班費計算器支援平日/休息日/例假日。" locale={locale}>
+  <!-- Page Hero -->
+  <section class="page-hero">
     <div class="container">
-      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">薪資計算</div>
-      <h1 style="font-size:32px;font-weight:400;letter-spacing:-0.5px;color:var(--color-text-primary);margin-bottom:8px;">薪資試算</h1>
-      <p style="font-size:14px;color:var(--color-text-secondary);font-weight:300;">即將推出 — 計算稅後薪資、勞健保扣額、加班費。</p>
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">薪資計算工具</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Salary Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:560px;line-height:1.7;">
+        月薪扣完勞保、健保、所得稅後實拿多少？加班費到底算對了嗎？這裡一次算清楚。
+      </p>
     </div>
-  </div>
-  <section class="section">
+  </section>
+
+  <!-- Calculator Cards Navigation -->
+  <section style="padding:48px 0 0;background:var(--color-bg);">
     <div class="container">
-      <div class="calc-container" style="padding:48px;text-align:center;">
-        <span style="font-size:48px;display:block;margin-bottom:16px;">💼</span>
-        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">薪資試算計算器</h2>
-        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">此功能即將推出。輸入月薪，計算勞保、健保、所得稅後的實拿薪資。</p>
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">兩個計算器</div>
+      <div class="tool-cards">
+        <a href="#salary-calculator" class="tool-card" style="border-right:0.5px solid var(--color-border);">
+          <span class="tool-icon">💰</span>
+          <h3>薪資稅後試算</h3>
+          <p>輸入月薪與扶養人數，計算勞保費、健保費、所得稅預扣後的每月實拿金額及年薪總覽。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">勞保費</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">健保費</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">所得稅預扣</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">勞退自提</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">立即試算 →</span>
+        </a>
+        <a href="#overtime-calculator" class="tool-card">
+          <span class="tool-icon">⏰</span>
+          <h3>加班費計算器</h3>
+          <p>依勞基法計算平日延長工時、休息日加班、例假日及國定假日出勤的正確加班費。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">平日133%/167%</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">休息日</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">例假/國定假日</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">立即試算 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculator 1: 薪資稅後計算 -->
+  <section id="salary-calculator" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 01</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">台灣薪資稅後試算</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">含 2026 年勞保 12.5%、健保 5.17% 費率，所得稅採簡易估算</p>
+      </div>
+      <SalaryCalculator client:load />
+    </div>
+  </section>
+
+  <!-- Calculator 2: 加班費 -->
+  <section id="overtime-calculator" class="section" style="scroll-margin-top:64px;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 02</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">加班費計算器</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">依勞基法第 24 條、第 39 條計算，含費率倍數速查表</p>
+      </div>
+      <OvertimeCalculator client:load />
+    </div>
+  </section>
+
+  <!-- Key Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">常見觀念</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;letter-spacing:-0.5px;">關於薪資，這三件事要知道</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📋</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">勞健保按「投保級距」算</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            實際薪資需對應到「投保薪資級距」，非直接按月薪計算。超過 45,800 元，勞保費仍以 45,800 為上限。
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⏱️</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">時薪 = 月薪 ÷ 240</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            勞基法規定時薪以月薪除以 240 計算（30天×8小時）。月薪 40,000 的時薪約 167 元，加班費依此換算。
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⚡</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">休息日 vs 例假日</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            一週兩天休假中：休息日雇主可彈性安排加班；例假日原則上不得加班，例外出勤費率最高，且有法律風險。
+          </p>
+        </div>
       </div>
     </div>
   </section>

@@ -1,22 +1,128 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getLocale, t, localePath } from '../../i18n/utils';
+import LaborInsurancePensionCalculator from '../../components/calculators/LaborInsurancePensionCalculator';
+import LaborPensionCalculator from '../../components/calculators/LaborPensionCalculator';
+import RetirementGapCalculator from '../../components/calculators/RetirementGapCalculator';
 const locale = getLocale(Astro.url);
 ---
-<BaseLayout title={t(locale, 'nav.retirement')} locale={locale}>
-  <div style="background:var(--color-bg-card);border-bottom:0.5px solid var(--color-border);padding:48px 0;">
+<BaseLayout title="退休金試算 2026｜勞保老年給付 + 勞退新制 + 缺口計算" description="三合一退休金試算工具：勞保老年年金月領/一次領、勞退新制累積試算、退休資金缺口計算。含 2026 最新費率，完全免費。" locale={locale}>
+  <!-- Page Hero -->
+  <section class="page-hero">
     <div class="container">
-      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:12px;">退休規劃</div>
-      <h1 style="font-size:32px;font-weight:400;letter-spacing:-0.5px;color:var(--color-text-primary);margin-bottom:8px;">退休金試算</h1>
-      <p style="font-size:14px;color:var(--color-text-secondary);font-weight:300;">即將推出 — 算清楚退休需要多少錢，每月要存多少。</p>
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">退休規劃工具</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Retirement Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:560px;line-height:1.7;">
+        勞保老年給付、勞退新制累積、退休金缺口——三個計算器，把退休需要多少錢算清楚。
+      </p>
     </div>
-  </div>
-  <section class="section">
+  </section>
+
+  <!-- Calculator Cards Navigation -->
+  <section style="padding:48px 0 0;background:var(--color-bg);">
     <div class="container">
-      <div class="calc-container" style="padding:48px;text-align:center;">
-        <span style="font-size:48px;display:block;margin-bottom:16px;">🌅</span>
-        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">退休金試算</h2>
-        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">此功能即將推出。設定目標退休年齡與月生活費，計算退休資金需求與每月儲蓄目標。</p>
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">三個計算器</div>
+      <div class="tool-cards">
+        <a href="#labor-insurance-pension" class="tool-card" style="border-right:0.5px solid var(--color-border);">
+          <span class="tool-icon">🏛️</span>
+          <h3>勞保老年給付</h3>
+          <p>A式/B式月領年金試算，或選擇一次給付。依投保年資與平均薪資計算，自動取較高金額。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">月領年金</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">一次給付</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">回本試算</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">立即試算 →</span>
+        </a>
+        <a href="#labor-pension-new" class="tool-card" style="border-right:0.5px solid var(--color-border);">
+          <span class="tool-icon">💼</span>
+          <h3>勞退新制試算</h3>
+          <p>計算雇主提繳 6% + 自提比例，依年投報率估算退休時累積金額與每月可領金額。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">雇主6%提繳</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">自提節稅</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">複利試算</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">立即試算 →</span>
+        </a>
+        <a href="#retirement-gap" class="tool-card">
+          <span class="tool-icon">📊</span>
+          <h3>退休金缺口計算</h3>
+          <p>設定目標退休年齡、月花費與預期壽命，計算退休資金總需求、目前缺口與每月需儲蓄金額。</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">通膨調整</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">4%法則</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">缺口試算</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">立即試算 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculator 1: 勞保老年給付 -->
+  <section id="labor-insurance-pension" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 01</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">勞保老年給付試算</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">依 2026 勞保條例，A式/B式月領年金自動取高，或計算一次給付金額</p>
+      </div>
+      <LaborInsurancePensionCalculator client:load />
+    </div>
+  </section>
+
+  <!-- Calculator 2: 勞退新制 -->
+  <section id="labor-pension-new" class="section" style="scroll-margin-top:64px;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 02</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">勞退新制退休金試算</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">雇主強制提繳 6% + 自提 0~6%，複利累積退休帳戶金額</p>
+      </div>
+      <LaborPensionCalculator client:load />
+    </div>
+  </section>
+
+  <!-- Calculator 3: 缺口計算 -->
+  <section id="retirement-gap" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 03</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">退休金缺口計算</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">設定退休年齡、月花費與壽命，計算還差多少錢、每月要存多少</p>
+      </div>
+      <RetirementGapCalculator client:load />
+    </div>
+  </section>
+
+  <!-- Key Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">常見觀念</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;letter-spacing:-0.5px;">退休前，先搞懂這三件事</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">🏛️</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">勞保 vs 勞退</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            勞保是保險制度（老年年金），依年資計算月領；勞退新制是個人帳戶（雇主強制提繳6%），可累積投資。兩者可同時請領。
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📈</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">自提 6% 的節稅效果</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            勞退自提金額可從薪資所得扣除，年薪 60 萬者若自提 6%，約可減少稅負 2,000 元以上，相當於額外補貼。
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">💰</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">4% 法則怎麼用</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            每年提領不超過退休資產的 4%，資產理論上可支撐 30 年以上。月花費 4 萬元，需要準備的退休金約為 1,200 萬元。
+          </p>
+        </div>
       </div>
     </div>
   </section>
