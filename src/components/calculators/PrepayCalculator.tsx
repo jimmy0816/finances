@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { prepayT, fmtWanLocale, type CalcLocale } from '../../i18n/calcTranslations';
 import {
   LineChart,
   Line,
@@ -137,12 +138,14 @@ function buildChartData(
   paid: number,
   prepayAmt: number,
   remainBal: number,
+  origKey: string,
+  prepayKey: string,
 ) {
   const M = calcMonthly(P, r, n);
   const newPrincipal = Math.max(0, remainBal - prepayAmt);
   const shortenMonths = newPrincipal <= 0 ? 0 : monthsToPayOff(newPrincipal, r, M);
 
-  const data: { month: number; 不提前還: number; 提前還款: number }[] = [];
+  const data: { month: number; [key: string]: number }[] = [];
   const step = n > 120 ? 6 : 3;
 
   let origBal = P;
@@ -174,8 +177,8 @@ function buildChartData(
 
     data.push({
       month: k,
-      不提前還: Math.max(0, Math.round(origBal)),
-      提前還款: Math.max(0, Math.round(prepayBal)),
+      [origKey]: Math.max(0, Math.round(origBal)),
+      [prepayKey]: Math.max(0, Math.round(prepayBal)),
     });
   }
 
@@ -183,7 +186,10 @@ function buildChartData(
 }
 
 /* ── Component ── */
-export default function PrepayCalculator() {
+export default function PrepayCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = prepayT[(locale as CalcLocale)] ?? prepayT['zh-TW'];
+  const origKey = locale === 'en' ? 'No Prepay' : locale === 'ja' ? '通常返済' : '不提前還';
+  const prepayKey = locale === 'en' ? 'With Prepay' : locale === 'ja' ? '繰り上げ返済' : '提前還款';
   const [loanWan, setLoanWan] = useState(1000);
   const [years, setYears] = useState(30);
   const [annualRate, setAnnualRate] = useState(2.1);
@@ -205,8 +211,10 @@ export default function PrepayCalculator() {
         paidYears * 12,
         prepayWan * 10000,
         result.remainBal,
+        origKey,
+        prepayKey,
       ),
-    [loanWan, annualRate, years, paidYears, prepayWan, result.remainBal],
+    [loanWan, annualRate, years, paidYears, prepayWan, result.remainBal, origKey, prepayKey],
   );
 
   const maxSaved = Math.max(result.shortenSaved, result.lowerSaved);
@@ -216,11 +224,11 @@ export default function PrepayCalculator() {
       return (
         <div style={{ background: '#fff', border: '0.5px solid #E8DDD0', padding: '10px 14px', fontSize: 12 }}>
           <p style={{ color: '#8A7E72', fontFamily: 'var(--font-mono)', fontSize: 11, marginBottom: 4 }}>
-            第 {label} 月
+            {locale === 'en' ? `Month ${label}` : locale === 'ja' ? `${label}ヶ月目` : `第 ${label} 月`}
           </p>
           {payload.map((p: any) => (
             <p key={p.name} style={{ color: p.stroke, margin: '2px 0' }}>
-              {p.name}：{fmtWan(p.value)}
+              {p.name}：{fmtWanLocale(p.value, locale as CalcLocale)}
             </p>
           ))}
         </div>
@@ -233,9 +241,9 @@ export default function PrepayCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>⏩ 提前還款效益試算</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          輸入貸款條件與提前還款金額，即時算出省下多少利息、縮短幾年
+          {tr.headerDesc}
         </p>
       </div>
 
@@ -243,9 +251,9 @@ export default function PrepayCalculator() {
       <div className="calc-body">
         {/* ── Inputs ── */}
         <div className="calc-inputs">
-          {/* 貸款金額 */}
+          {/* Loan Amount */}
           <div className="calc-field">
-            <label className="calc-label">原始貸款金額</label>
+            <label className="calc-label">{tr.origLoan}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -257,7 +265,7 @@ export default function PrepayCalculator() {
                 onChange={(e) => setLoanWan(Number(e.target.value))}
                 style={{ flex: 1 }}
               />
-              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>萬元</span>
+              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>{tr.loanUnit}</span>
             </div>
             <input
               type="range"
@@ -269,15 +277,15 @@ export default function PrepayCalculator() {
               style={{ width: '100%', marginTop: 8, accentColor: 'var(--color-accent)' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
-              <span>100萬</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{fmt(loanWan)} 萬</span>
-              <span>5000萬</span>
+              <span>{tr.loanInputHint(100)}</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{tr.loanInputHint(loanWan)}</span>
+              <span>{tr.loanInputHint(5000)}</span>
             </div>
           </div>
 
-          {/* 年期 */}
+          {/* Loan Term */}
           <div className="calc-field">
-            <label className="calc-label">原始貸款年期</label>
+            <label className="calc-label">{tr.loanTerm}</label>
             <select
               className="calc-select"
               value={years}
@@ -288,14 +296,14 @@ export default function PrepayCalculator() {
               }}
             >
               {[10, 15, 20, 25, 30, 40].map((y) => (
-                <option key={y} value={y}>{y} 年</option>
+                <option key={y} value={y}>{y} {tr.yearUnit}</option>
               ))}
             </select>
           </div>
 
-          {/* 年利率 */}
+          {/* Annual Rate */}
           <div className="calc-field">
-            <label className="calc-label">年利率</label>
+            <label className="calc-label">{tr.annualRate}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -320,14 +328,14 @@ export default function PrepayCalculator() {
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
               <span>0.5%</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{annualRate.toFixed(2)}%</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{tr.rateInputHint(annualRate)}</span>
               <span>8%</span>
             </div>
           </div>
 
-          {/* 已還年數 */}
+          {/* Years Paid */}
           <div className="calc-field">
-            <label className="calc-label">已還年數</label>
+            <label className="calc-label">{tr.paidYears}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -351,15 +359,15 @@ export default function PrepayCalculator() {
               style={{ width: '100%', marginTop: 8, accentColor: 'var(--color-accent)' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
-              <span>0年</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>已還 {paidYears} 年</span>
-              <span>{years - 1}年</span>
+              <span>0 {tr.yearUnit}</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{paidYears} {tr.yearUnit}</span>
+              <span>{years - 1} {tr.yearUnit}</span>
             </div>
           </div>
 
-          {/* 提前還款金額 */}
+          {/* Prepay Amount */}
           <div className="calc-field">
-            <label className="calc-label">提前還款金額</label>
+            <label className="calc-label">{tr.prepayAmount}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -371,7 +379,7 @@ export default function PrepayCalculator() {
                 onChange={(e) => setPrepayWan(Number(e.target.value))}
                 style={{ flex: 1 }}
               />
-              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>萬元</span>
+              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>{tr.loanUnit}</span>
             </div>
             <input
               type="range"
@@ -383,7 +391,8 @@ export default function PrepayCalculator() {
               style={{ width: '100%', marginTop: 8, accentColor: 'var(--color-accent)' }}
             />
             <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
-              目前剩餘本金：{fmtWan(result.remainBal)}
+              {locale === 'en' ? 'Current balance: ' : locale === 'ja' ? '現在の残高: ' : '目前剩餘本金：'}
+              {fmtWanLocale(result.remainBal, locale as CalcLocale)}
             </p>
           </div>
         </div>
@@ -392,30 +401,30 @@ export default function PrepayCalculator() {
         <div className="calc-results">
           {/* Big number */}
           <div style={{ marginBottom: 24 }}>
-            <div className="result-label">最多可省下利息（縮短年期）</div>
-            <div className="result-big">{fmtWan(Math.max(0, result.shortenSaved))}</div>
+            <div className="result-label">{tr.interestSaved} ({tr.shortenTitle})</div>
+            <div className="result-big">{fmtWanLocale(Math.max(0, result.shortenSaved), locale as CalcLocale)}</div>
           </div>
 
           {/* Summary */}
           <div style={{ borderTop: '0.5px solid var(--color-border)', paddingTop: 16 }}>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>目前每月還款</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.origMonthly}</span>
               <span style={{ fontWeight: 500 }}>NT$ {fmt(Math.round(result.origMonthly))}</span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>剩餘月數</span>
-              <span>{result.origRemainingMonths} 個月（{(result.origRemainingMonths / 12).toFixed(1)} 年）</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.origRemain}</span>
+              <span>{result.origRemainingMonths}{tr.month} ({(result.origRemainingMonths / 12).toFixed(1)} {tr.yearUnit})</span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>縮短年期 → 提前結清</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.shortenTitle} →</span>
               <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>
                 {result.shortenNewMonths > 0
-                  ? `剩 ${result.shortenNewMonths} 月（省 ${(result.origRemainingMonths - result.shortenNewMonths)} 月）`
-                  : '立即結清'}
+                  ? tr.shortenMonths(result.shortenNewMonths)
+                  : (locale === 'en' ? 'Paid off immediately' : locale === 'ja' ? '即時完済' : '立即結清')}
               </span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>降低月付 → 新月付</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.lowerTitle} →</span>
               <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>
                 NT$ {fmt(Math.round(result.lowerNewMonthly))}
                 <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginLeft: 4 }}>
@@ -430,13 +439,13 @@ export default function PrepayCalculator() {
       {/* ── Comparison Table ── */}
       <div style={{ padding: '24px 32px', borderTop: '0.5px solid var(--color-border)' }}>
         <h3 style={{ fontSize: 14, fontWeight: 500, marginBottom: 16, color: 'var(--color-text-primary)' }}>
-          📊 還款方案比較
+          {tr.chartTitle}
         </h3>
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 520, fontSize: 13 }}>
             <thead>
               <tr style={{ background: 'var(--color-text-primary)', color: '#fff' }}>
-                {['', '不提前還', '縮短年期', '降低月付'].map((h) => (
+                {['', tr.colOrig, tr.colShorten, tr.colLower].map((h) => (
                   <th
                     key={h}
                     style={{
@@ -457,30 +466,30 @@ export default function PrepayCalculator() {
             <tbody>
               {[
                 {
-                  label: '每月還款',
+                  label: tr.rowMonthly,
                   orig: `NT$ ${fmt(Math.round(result.origMonthly))}`,
                   shorten: `NT$ ${fmt(Math.round(result.origMonthly))}`,
                   lower: `NT$ ${fmt(Math.round(result.lowerNewMonthly))}`,
                   lowerHighlight: true,
                 },
                 {
-                  label: '剩餘年期',
-                  orig: `${(result.origRemainingMonths / 12).toFixed(1)} 年`,
-                  shorten: result.shortenNewMonths > 0 ? `${(result.shortenNewMonths / 12).toFixed(1)} 年` : '結清',
-                  lower: `${(result.origRemainingMonths / 12).toFixed(1)} 年`,
+                  label: tr.rowTerm,
+                  orig: `${(result.origRemainingMonths / 12).toFixed(1)} ${tr.yearUnit}`,
+                  shorten: result.shortenNewMonths > 0 ? `${(result.shortenNewMonths / 12).toFixed(1)} ${tr.yearUnit}` : (locale === 'en' ? 'Paid off' : locale === 'ja' ? '完済' : '結清'),
+                  lower: `${(result.origRemainingMonths / 12).toFixed(1)} ${tr.yearUnit}`,
                   shortenHighlight: true,
                 },
                 {
-                  label: '剩餘總利息',
-                  orig: fmtWan(Math.max(0, result.origTotalInterest)),
-                  shorten: fmtWan(Math.max(0, result.shortenTotalInterest)),
-                  lower: fmtWan(Math.max(0, result.lowerTotalInterest)),
+                  label: tr.rowTotal,
+                  orig: fmtWanLocale(Math.max(0, result.origTotalInterest), locale as CalcLocale),
+                  shorten: fmtWanLocale(Math.max(0, result.shortenTotalInterest), locale as CalcLocale),
+                  lower: fmtWanLocale(Math.max(0, result.lowerTotalInterest), locale as CalcLocale),
                 },
                 {
-                  label: '節省利息',
+                  label: tr.rowSaved,
                   orig: '—',
-                  shorten: result.shortenSaved > 0 ? `🎉 ${fmtWan(result.shortenSaved)}` : '—',
-                  lower: result.lowerSaved > 0 ? `🎉 ${fmtWan(result.lowerSaved)}` : '—',
+                  shorten: result.shortenSaved > 0 ? `🎉 ${fmtWanLocale(result.shortenSaved, locale as CalcLocale)}` : '—',
+                  lower: result.lowerSaved > 0 ? `🎉 ${fmtWanLocale(result.lowerSaved, locale as CalcLocale)}` : '—',
                   accentShorten: result.shortenSaved > 0,
                   accentLower: result.lowerSaved > 0,
                 },
@@ -526,7 +535,7 @@ export default function PrepayCalculator() {
       {/* ── Chart ── */}
       <div style={{ padding: '24px 32px', borderTop: '0.5px solid var(--color-border)' }}>
         <h3 style={{ fontSize: 14, fontWeight: 500, marginBottom: 20, color: 'var(--color-text-primary)' }}>
-          📈 剩餘本金走勢對比
+          {locale === 'en' ? '📈 Remaining Balance Comparison' : locale === 'ja' ? '📈 残高推移比較' : '📈 剩餘本金走勢對比'}
         </h3>
         <div style={{ height: 240 }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -534,13 +543,13 @@ export default function PrepayCalculator() {
               <CartesianGrid strokeDasharray="3 3" stroke="#E8DDD0" />
               <XAxis
                 dataKey="month"
-                tickFormatter={(v) => `${Math.round(v / 12)}年`}
+                tickFormatter={(v) => locale === 'en' ? `Yr${Math.round(v / 12)}` : locale === 'ja' ? `${Math.round(v / 12)}年` : `${Math.round(v / 12)}年`}
                 tick={{ fontSize: 11, fill: '#A89A8C' }}
                 tickLine={false}
                 axisLine={{ stroke: '#E8DDD0' }}
               />
               <YAxis
-                tickFormatter={(v) => `${Math.round(v / 10000)}萬`}
+                tickFormatter={(v) => locale === 'en' ? `NT$${Math.round(v / 10000)}K` : `${Math.round(v / 10000)}万`}
                 tick={{ fontSize: 11, fill: '#A89A8C' }}
                 tickLine={false}
                 axisLine={false}
@@ -552,14 +561,14 @@ export default function PrepayCalculator() {
               />
               <Line
                 type="monotone"
-                dataKey="不提前還"
+                dataKey={origKey}
                 stroke="#D8CDBE"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
                 type="monotone"
-                dataKey="提前還款"
+                dataKey={prepayKey}
                 stroke="#E07020"
                 strokeWidth={2}
                 dot={false}
@@ -572,15 +581,15 @@ export default function PrepayCalculator() {
       {/* ── Extra Monthly Section ── */}
       <div style={{ padding: '24px 32px 32px', borderTop: '0.5px solid var(--color-border)', background: 'var(--color-accent-bg)' }}>
         <h3 style={{ fontSize: 14, fontWeight: 500, marginBottom: 4, color: 'var(--color-text-primary)' }}>
-          💡 每月多還試算
+          💡 {tr.monthlyExtra}
         </h3>
         <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 20 }}>
-          若每個月固定多還一筆，能提前幾年結清？
+          {locale === 'en' ? 'How many years earlier can you pay off with extra monthly payments?' : locale === 'ja' ? '毎月追加返済することで何年早く完済できますか？' : '若每個月固定多還一筆，能提前幾年結清？'}
         </p>
 
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
           <div style={{ flex: 1, minWidth: 200 }}>
-            <label className="calc-label" style={{ marginBottom: 8, display: 'block' }}>每月額外多還</label>
+            <label className="calc-label" style={{ marginBottom: 8, display: 'block' }}>{tr.monthlyExtra}</label>
             <input
               type="range"
               min={1000}
@@ -599,17 +608,17 @@ export default function PrepayCalculator() {
 
           <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             <div>
-              <div className="result-label" style={{ marginBottom: 4 }}>提前結清</div>
+              <div className="result-label" style={{ marginBottom: 4 }}>{locale === 'en' ? 'Early Payoff' : locale === 'ja' ? '繰り上げ完済' : '提前結清'}</div>
               <div style={{ fontSize: 22, fontWeight: 300, color: 'var(--color-accent)' }}>
                 {result.extraShortenYears >= 0.1
-                  ? `${result.extraShortenYears.toFixed(1)} 年`
-                  : '< 0.1 年'}
+                  ? `${result.extraShortenYears.toFixed(1)} ${tr.yearUnit}`
+                  : `< 0.1 ${tr.yearUnit}`}
               </div>
             </div>
             <div>
-              <div className="result-label" style={{ marginBottom: 4 }}>節省利息</div>
+              <div className="result-label" style={{ marginBottom: 4 }}>{tr.interestSaved}</div>
               <div style={{ fontSize: 22, fontWeight: 300, color: 'var(--color-accent)' }}>
-                {result.extraSaved > 0 ? fmtWan(result.extraSaved) : '—'}
+                {result.extraSaved > 0 ? fmtWanLocale(result.extraSaved, locale as CalcLocale) : '—'}
               </div>
             </div>
           </div>

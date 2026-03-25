@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t, localePath } from '../../i18n/utils';
+const locale = 'ja';
+---
+<BaseLayout title="台湾財務計算ツール — 住宅ローン・退職・給与" heroNav={true} locale={locale}>
+
+  <!-- Hero -->
+  <section class="hero-gradient" style="position:relative;min-height:80vh;display:flex;align-items:center;padding-top:var(--nav-height);">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%, rgba(224,112,32,0.10) 0%, transparent 60%);"></div>
+    <div class="container" style="position:relative;padding-top:80px;padding-bottom:80px;">
+      <div class="hero-eyebrow">finances.jimmy.vip</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(40px,7vw,80px);font-weight:700;line-height:1.05;letter-spacing:-1px;color:#fff;max-width:700px;margin-bottom:24px;text-transform:uppercase;">
+        数字を知って、<span style="color:var(--color-accent);">より良い判断を</span>
+      </h1>
+      <p class="hero-desc" style="font-size:16px;font-weight:300;color:rgba(255,255,255,0.65);max-width:480px;line-height:1.75;margin-bottom:40px;">
+        台湾の無料財務計算ツール — 住宅ローン返済、退職計画、手取り給与。広告なし、登録不要。
+      </p>
+      <div class="hero-actions">
+        <a href={localePath(locale, '/mortgage/calculator/')} class="btn-primary">計算を始める</a>
+        <a href={localePath(locale, '/blog/')} class="btn-secondary">{t(locale, 'nav.blog')}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool Cards -->
+  <section class="section" style="background:var(--color-bg);padding:64px 0;">
+    <div class="container">
+      <div class="section-label">主要ツール</div>
+      <div class="section-title" style="margin-bottom:40px;">3つの財務計算ツール</div>
+      <div class="tool-cards">
+
+        <a href={localePath(locale, '/mortgage/')} class="tool-card">
+          <span class="tool-icon">🏠</span>
+          <h3>住宅ローン計算</h3>
+          <p>借入金額・金利・期間を入力して月返済額・総利息・返済スケジュールを即座に計算。繰り上げ返済や複数プラン比較も対応。</p>
+          <span class="tool-card-link">計算する →</span>
+        </a>
+
+        <a href={localePath(locale, '/retirement/')} class="tool-card">
+          <span class="tool-icon">🌅</span>
+          <h3>退職計画</h3>
+          <p>目標退職年齢と生活水準を設定し、毎月の必要貯蓄額と退職資金の不足額を計算。</p>
+          <span class="tool-card-link">計算する →</span>
+        </a>
+
+        <a href={localePath(locale, '/salary/')} class="tool-card">
+          <span class="tool-icon">💼</span>
+          <h3>給与計算</h3>
+          <p>2026年の台湾レートで労働保険・健康保険・所得税・年金控除後の手取り額を計算。</p>
+          <span class="tool-card-link">計算する →</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background:var(--color-accent);padding:64px 0;">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:36px;font-weight:700;text-transform:uppercase;letter-spacing:-0.5px;color:#fff;margin-bottom:8px;">計算を始めませんか？</h2>
+        <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.8);">無料、広告なし、アカウント不要。</p>
+      </div>
+      <a href={localePath(locale, '/mortgage/calculator/')} style="background:#fff;color:var(--color-accent);padding:16px 40px;font-size:14px;font-weight:500;text-decoration:none;transition:opacity 120ms;">
+        今すぐ始める
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

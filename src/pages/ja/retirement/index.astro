@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LaborInsurancePensionCalculator from '../../../components/calculators/LaborInsurancePensionCalculator';
+import LaborPensionCalculator from '../../../components/calculators/LaborPensionCalculator';
+import RetirementGapCalculator from '../../../components/calculators/RetirementGapCalculator';
+const locale = 'ja';
+---
+<BaseLayout title="台湾退職計算ツール 2026 — 労働保険・年金・不足額" description="台湾退職3点セット：労働保険老齢給付・新退職金制度・老後資金不足額計算。2026年最新レート。無料。" locale={locale}>
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">退職計画ツール</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Retirement Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:560px;line-height:1.7;">
+        台湾の退職制度に関する3つの計算ツール：労働保険年金・新退職金制度・老後資金不足額分析。
+      </p>
+      <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;">⚠️ 台湾の労働法に基づきます。台湾居住者向けです。</p>
+    </div>
+  </section>
+
+  <section style="padding:48px 0 0;background:var(--color-bg);">
+    <div class="container">
+      <div class="tool-cards">
+        <a href="#labor-insurance-pension" class="tool-card">
+          <span class="tool-icon">🏛️</span>
+          <h3>労働保険年金</h3>
+          <p>加入年数と平均給与から月額年金または一時金を計算。A式・B式の高い方を自動適用。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+        <a href="#labor-pension-new" class="tool-card">
+          <span class="tool-icon">💼</span>
+          <h3>新退職金制度</h3>
+          <p>事業主強制拠出6%＋自己拠出。複利運用で退職時累積額と月額受取額を試算。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+        <a href="#retirement-gap" class="tool-card">
+          <span class="tool-icon">📊</span>
+          <h3>老後資金不足額</h3>
+          <p>退職年齢・月生活費・平均寿命を設定。必要総額・不足額・毎月必要貯蓄額を計算。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="labor-insurance-pension" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 01</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">労働保険老齢給付（勞保老年給付）</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">台湾労働保険法2026年 — 月額年金（A式/B式高い方）または一時金</p>
+      </div>
+      <LaborInsurancePensionCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <section id="labor-pension-new" class="section" style="scroll-margin-top:64px;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 02</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">新退職金制度（勞退新制）</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">事業主強制6%＋自己拠出0〜6%の複利累積</p>
+      </div>
+      <LaborPensionCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <section id="retirement-gap" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 03</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">老後資金不足額計算</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">退職年齢・月生活費・寿命を設定して不足額と毎月必要貯蓄額を計算</p>
+      </div>
+      <RetirementGapCalculator client:load locale={locale} />
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+const locale = 'ja';
+---
+<BaseLayout title="ブログ — 台湾財務ガイド" locale={locale}>
+  <section class="blog-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">ナレッジベース</div>
+      <h1>財務ブログ</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:480px;line-height:1.7;margin-top:16px;">金融知識、計算機ガイド、台湾のお金管理。商品販売なし — 数字の理解をサポートします。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div style="padding:48px;text-align:center;border:0.5px solid var(--color-border);background:var(--color-bg-card);">
+        <span style="font-size:48px;display:block;margin-bottom:16px;">📚</span>
+        <h2 style="font-size:20px;font-weight:400;margin-bottom:12px;">記事準備中</h2>
+        <p style="font-size:14px;color:var(--color-text-muted);font-weight:300;">住宅ローン・退職計画・給与税務に関する記事を準備中です。</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { salaryT, type CalcLocale } from '../../i18n/calcTranslations';
 
 /* ─── Helpers ─── */
 const fmt = (n: number) =>
@@ -119,7 +120,8 @@ function calcSalary(monthlySalary: number, dependents: number, selfPensionRate: 
 }
 
 /* ─── Component ─── */
-export default function SalaryCalculator() {
+export default function SalaryCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = salaryT[(locale as CalcLocale)] ?? salaryT['zh-TW'];
   const [monthlySalary, setMonthlySalary] = useState(45000);
   const [dependents, setDependents] = useState(0);
   const [selfPensionRate, setSelfPensionRate] = useState(0); // %
@@ -133,18 +135,21 @@ export default function SalaryCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>💰 薪資稅後試算</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          依 2026 年費率計算勞保費、健保費、所得稅預扣、勞退後的實拿金額
+          {tr.note}
         </p>
+        {locale !== 'zh-TW' && (
+          <p style={{ fontSize: 11, color: 'var(--color-warning)', marginTop: 4 }}>{tr.laborLawNote}</p>
+        )}
       </div>
 
       <div className="calc-body">
         {/* ── Inputs ── */}
         <div className="calc-inputs">
-          {/* 月薪 */}
+          {/* Monthly Salary */}
           <div className="calc-field">
-            <label className="calc-label">月薪（稅前）</label>
+            <label className="calc-label">{tr.monthlySalary}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -174,9 +179,9 @@ export default function SalaryCalculator() {
             </div>
           </div>
 
-          {/* 扶養人數 */}
+          {/* Dependents */}
           <div className="calc-field">
-            <label className="calc-label">扶養親屬人數</label>
+            <label className="calc-label">{tr.dependents}</label>
             <select
               className="calc-select"
               value={dependents}
@@ -184,21 +189,18 @@ export default function SalaryCalculator() {
             >
               {[0, 1, 2, 3, 4].map((n) => (
                 <option key={n} value={n}>
-                  {n === 0 ? '無（單身）' : `${n} 人`}
+                  {n === 0 ? (locale === 'en' ? 'None' : locale === 'ja' ? 'なし' : '無（單身）') : `${n}`}
                 </option>
               ))}
             </select>
-            <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
-              影響健保費及所得稅免稅額（每增加 1 人，免稅額增加 97,000 元）
-            </p>
           </div>
 
-          {/* 勞退自提 */}
+          {/* Pension Self Rate */}
           <div className="calc-field">
             <label className="calc-label">
-              勞退自提比例
+              {tr.selfPension}
               <span style={{ fontSize: 11, color: 'var(--color-accent)', marginLeft: 8 }}>
-                （抵減所得稅）
+                {locale === 'en' ? '(tax-deductible)' : locale === 'ja' ? '（節税）' : '（抵減所得稅）'}
               </span>
             </label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -235,45 +237,45 @@ export default function SalaryCalculator() {
         <div className="calc-results">
           <div className="result-header">
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
-              每月扣項明細（2026年費率）
+              {tr.note}
             </span>
           </div>
 
-          {/* 主結果 */}
+          {/* Main result */}
           <div className="result-primary">
-            <div className="result-label">每月實拿（稅後到手）</div>
+            <div className="result-label">{tr.netMonthly}</div>
             <div className="result-value">{fmtCurrency(result.netPay)}</div>
             <div className="result-sublabel">
-              扣除率 {result.deductionRate.toFixed(1)}%，每月扣 {fmtCurrency(result.totalDeduction)}
+              {result.deductionRate.toFixed(1)}% — {fmtCurrency(result.totalDeduction)}/{locale === 'en' ? 'mo' : locale === 'ja' ? '月' : '月'}
             </div>
           </div>
 
-          {/* 扣項明細 */}
+          {/* Deduction details */}
           <div style={{ marginTop: 20 }}>
             {[
               {
-                label: '勞工保險費',
-                sub: `投保薪資 ${fmt(result.laborInsBracket)} × 12.5% × 20%`,
+                label: tr.laborIns,
+                sub: `${fmt(result.laborInsBracket)} × 12.5% × 20%`,
                 amount: result.laborInsEmployee,
                 color: '#6366F1',
               },
               {
-                label: '全民健保費',
-                sub: `投保金額 ${fmt(result.healthBracket)} × 5.17% × 30%${dependents > 0 ? ` × ${1 + dependents}人` : ''}`,
+                label: tr.healthIns,
+                sub: `${fmt(result.healthBracket)} × 5.17% × 30%${dependents > 0 ? ` × ${1 + dependents}` : ''}`,
                 amount: result.healthEmployee,
                 color: '#0EA5E9',
               },
               ...(selfPensionRate > 0
                 ? [{
-                    label: '勞退自提',
-                    sub: `月薪 × ${selfPensionRate}%（可抵扣所得稅）`,
+                    label: tr.pension,
+                    sub: `× ${selfPensionRate}%`,
                     amount: result.laborPensionSelf,
                     color: '#10B981',
                   }]
                 : []),
               {
-                label: '薪資所得稅預扣',
-                sub: `年稅額 ${fmtCurrency(result.annualTax)} ÷ 12`,
+                label: tr.incomeTax,
+                sub: `${fmtCurrency(result.annualTax)} ÷ 12`,
                 amount: result.monthlyTax,
                 color: '#F59E0B',
               },
@@ -322,7 +324,7 @@ export default function SalaryCalculator() {
             ))}
           </div>
 
-          {/* 薪資總覽 */}
+          {/* Salary summary */}
           <div
             style={{
               marginTop: 20,
@@ -333,10 +335,10 @@ export default function SalaryCalculator() {
             }}
           >
             {[
-              { label: '月薪（稅前）', value: fmtCurrency(monthlySalary), bold: false },
-              { label: '月薪（實拿）', value: fmtCurrency(result.netPay), bold: true },
-              { label: '年薪（稅前）', value: fmtCurrency(result.annualGross), bold: false },
-              { label: '年薪（實拿）', value: fmtCurrency(result.annualNet), bold: true },
+              { label: tr.monthlySalary + ' (gross)', value: fmtCurrency(monthlySalary), bold: false },
+              { label: tr.netMonthly, value: fmtCurrency(result.netPay), bold: true },
+              { label: tr.grossAnnual, value: fmtCurrency(result.annualGross), bold: false },
+              { label: tr.netAnnual, value: fmtCurrency(result.annualNet), bold: true },
             ].map((row, i) => (
               <div
                 key={row.label}
@@ -363,14 +365,14 @@ export default function SalaryCalculator() {
             ))}
           </div>
 
-          {/* 雇主成本參考 */}
+          {/* Employer cost reference */}
           <div style={{ marginTop: 16 }}>
-            <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 8, fontFamily: 'var(--font-mono)', letterSpacing: '1px' }}>雇主月增負擔（參考）</div>
+            <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 8, fontFamily: 'var(--font-mono)', letterSpacing: '1px' }}>{locale === 'en' ? 'Employer Cost (reference)' : locale === 'ja' ? '事業主負担（参考）' : '雇主月增負擔（參考）'}</div>
             {[
-              { label: '勞保費（雇主 70%）', value: fmtCurrency(result.laborInsEmployer) },
-              { label: '健保費（雇主 60%）', value: fmtCurrency(result.healthEmployer) },
-              { label: '勞退提繳（6%）', value: fmtCurrency(result.laborPensionEmployer) },
-              { label: '雇主合計', value: fmtCurrency(result.laborInsEmployer + result.healthEmployer + result.laborPensionEmployer) },
+              { label: locale === 'en' ? 'Labor Ins. (70%)' : locale === 'ja' ? '労働保険料（70%）' : '勞保費（雇主 70%）', value: fmtCurrency(result.laborInsEmployer) },
+              { label: locale === 'en' ? 'Health Ins. (60%)' : locale === 'ja' ? '健康保険料（60%）' : '健保費（雇主 60%）', value: fmtCurrency(result.healthEmployer) },
+              { label: locale === 'en' ? 'Pension (6%)' : locale === 'ja' ? '年金（6%）' : '勞退提繳（6%）', value: fmtCurrency(result.laborPensionEmployer) },
+              { label: locale === 'en' ? 'Total' : locale === 'ja' ? '合計' : '雇主合計', value: fmtCurrency(result.laborInsEmployer + result.healthEmployer + result.laborPensionEmployer) },
             ].map((row) => (
               <div
                 key={row.label}
@@ -388,7 +390,9 @@ export default function SalaryCalculator() {
           </div>
 
           <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 20, lineHeight: 1.6 }}>
-            ⚠️ 使用 2026 年度費率，含勞保 12.5%、健保 5.17%，所得稅為預扣估算，以五申報為準。實際金額依個人扣除項目、年度薪資調整而有所不同。
+            {locale === 'zh-TW'
+              ? '⚠️ 使用 2026 年度費率，含勞保 12.5%、健保 5.17%，所得稅為預扣估算，以五申報為準。實際金額依個人扣除項目、年度薪資調整而有所不同。'
+              : tr.laborLawNote}
           </p>
         </div>
       </div>

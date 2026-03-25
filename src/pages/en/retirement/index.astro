@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LaborInsurancePensionCalculator from '../../../components/calculators/LaborInsurancePensionCalculator';
+import LaborPensionCalculator from '../../../components/calculators/LaborPensionCalculator';
+import RetirementGapCalculator from '../../../components/calculators/RetirementGapCalculator';
+const locale = 'en';
+---
+<BaseLayout title="Taiwan Retirement Calculators 2026 — Labor Insurance + Pension + Gap" description="Three-in-one Taiwan retirement calculator: labor insurance pension, new labor pension accumulation, and retirement gap analysis. 2026 rates. Free." locale={locale}>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">Retirement Planning</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Retirement Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:560px;line-height:1.7;">
+        Three calculators for Taiwan's retirement system: labor insurance pension, new labor pension, and retirement gap analysis.
+      </p>
+      <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;">⚠️ Based on Taiwan's labor laws. For Taiwan residents only.</p>
+    </div>
+  </section>
+
+  <!-- Navigation Cards -->
+  <section style="padding:48px 0 0;background:var(--color-bg);">
+    <div class="container">
+      <div class="tool-cards">
+        <a href="#labor-insurance-pension" class="tool-card">
+          <span class="tool-icon">🏛️</span>
+          <h3>Labor Insurance Pension</h3>
+          <p>Monthly annuity or lump sum based on years of coverage and average insured salary. Auto-selects higher of Formula A or B.</p>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate →</span>
+        </a>
+        <a href="#labor-pension-new" class="tool-card">
+          <span class="tool-icon">💼</span>
+          <h3>New Labor Pension</h3>
+          <p>Employer mandatory 6% + optional self-contribution. Compound interest accumulation estimate at retirement.</p>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate →</span>
+        </a>
+        <a href="#retirement-gap" class="tool-card">
+          <span class="tool-icon">📊</span>
+          <h3>Retirement Gap</h3>
+          <p>Set target retirement age, monthly expenses, and life expectancy. Calculate total needed and monthly savings required.</p>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculator 1 -->
+  <section id="labor-insurance-pension" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 01</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">Labor Insurance Pension (勞保老年給付)</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">Taiwan Labor Insurance Act 2026 — monthly annuity (Formula A/B higher) or lump sum</p>
+      </div>
+      <LaborInsurancePensionCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <!-- Calculator 2 -->
+  <section id="labor-pension-new" class="section" style="scroll-margin-top:64px;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 02</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">New Labor Pension (勞退新制)</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">Employer mandatory 6% + self 0–6% compound accumulation</p>
+      </div>
+      <LaborPensionCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <!-- Calculator 3 -->
+  <section id="retirement-gap" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 03</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">Retirement Gap Calculator</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">Set retirement age, monthly expenses, life expectancy — calculate gap and monthly savings needed</p>
+      </div>
+      <RetirementGapCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <!-- Key Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);">
+    <div class="container">
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;">3 Key Things About Taiwan's Retirement System</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">🏛️</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Labor Insurance vs. Labor Pension</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Labor Insurance (勞保) is a social insurance system — monthly pension based on years of coverage. Labor Pension (勞退) is a personal account — employer must contribute 6%. Both can be received simultaneously.
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📈</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Tax Benefit of Self-Contribution</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Self-contributions to Labor Pension are deductible from salary income. At NT$600K annual salary, 6% self-contribution saves over NT$2,000 in taxes — effectively a bonus.
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">💰</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">The 4% Rule</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Withdraw no more than 4% of retirement assets annually — theoretically sustainable for 30+ years. NT$40K/month spending requires ~NT$12M in retirement assets.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PrepayCalculator from '../../../components/calculators/PrepayCalculator';
+const locale = 'ja';
+---
+<BaseLayout title="繰り上げ返済計算 — 台湾住宅ローン" description="繰り上げ返済による利息節約額と返済期間短縮を計算。期間短縮型・返済額軽減型を比較。" locale={locale}>
+  <div class="page-header" style="padding:48px 40px 40px;border-bottom:0.5px solid #E8DDD0;">
+    <a href="/ja/mortgage/" style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);text-decoration:none;display:inline-block;margin-bottom:16px;">
+      ← 住宅ローンツール
+    </a>
+    <h1 style="font-family:var(--font-display);font-size:40px;font-weight:300;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;">繰り上げ返済計算</h1>
+    <p style="font-size:15px;color:#8A7E72;line-height:1.7;max-width:560px;font-weight:300;">
+      一括繰り上げ返済でどれだけ利息を節約できますか？何年早く完済できますか？
+    </p>
+  </div>
+  <div style="padding:40px;max-width:1080px;margin:0 auto;">
+    <PrepayCalculator client:load locale={locale} />
+  </div>
+  <div style="padding:24px 40px;border-top:0.5px solid var(--color-border);background:var(--color-bg);">
+    <p style="font-size:11px;color:var(--color-text-muted);line-height:1.7;max-width:760px;margin:0 auto;font-family:var(--font-mono);">
+      ⚠️ 免責事項：元利均等払い方式を基準とした試算です。教育・参考目的のみ。実際の条件・繰り上げ返済手数料はお取引銀行にご確認ください。
+    </p>
+  </div>
+</BaseLayout>

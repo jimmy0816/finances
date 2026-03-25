@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SalaryCalculator from '../../../components/calculators/SalaryCalculator';
+import OvertimeCalculator from '../../../components/calculators/OvertimeCalculator';
+const locale = 'ja';
+---
+<BaseLayout title="台湾給与計算 2026 — 手取り・残業代" description="台湾給与ツール：2026年レートで労働保険・健康保険・所得税控除後の手取り計算。残業代計算（平日・休日・祝日）対応。" locale={locale}>
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">給与ツール</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Salary Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:560px;line-height:1.7;">
+        各種控除後の実際の手取りはいくら？残業代は正しく計算されていますか？
+      </p>
+      <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;">⚠️ 台湾の2026年労働・税制に基づきます。台湾居住者向けです。</p>
+    </div>
+  </section>
+
+  <section style="padding:48px 0 0;background:var(--color-bg);">
+    <div class="container">
+      <div class="tool-cards">
+        <a href="#salary-calculator" class="tool-card">
+          <span class="tool-icon">💰</span>
+          <h3>手取り給与計算</h3>
+          <p>月収と扶養人数を入力して控除項目と月額手取りを計算。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+        <a href="#overtime-calculator" class="tool-card">
+          <span class="tool-icon">⏰</span>
+          <h3>残業代計算</h3>
+          <p>台湾労働基準法に基づく平日・休日・法定祝日の残業代を正確に計算。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="salary-calculator" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 01</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">台湾手取り給与計算</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">2026年レート：労働保険12.5%、健康保険5.17%、所得税源泉徴収（概算）</p>
+      </div>
+      <SalaryCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <section id="overtime-calculator" class="section" style="scroll-margin-top:64px;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 02</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">残業代計算</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">台湾労働基準法第24・39条 — 料率早見表付き</p>
+      </div>
+      <OvertimeCalculator client:load locale={locale} />
+    </div>
+  </section>
+</BaseLayout>

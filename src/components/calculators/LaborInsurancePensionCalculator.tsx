@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { laborInsuranceT, type CalcLocale } from '../../i18n/calcTranslations';
 
 /* ─── Helpers ─── */
 const fmt = (n: number) =>
@@ -43,7 +44,8 @@ function calcLumpSum(avgSalary: number, years: number): number {
 }
 
 /* ─── Component ─── */
-export default function LaborInsurancePensionCalculator() {
+export default function LaborInsurancePensionCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = laborInsuranceT[(locale as CalcLocale)] ?? laborInsuranceT['zh-TW'];
   const [avgSalary, setAvgSalary] = useState(40000);
   const [years, setYears] = useState(25);
   const [mode, setMode] = useState<'monthly' | 'lump'>('monthly');
@@ -64,18 +66,21 @@ export default function LaborInsurancePensionCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>🏛️ 勞保老年給付試算</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          依 2026 年勞保條例計算月領年金或一次給付，A式/B式自動取高
+          {tr.note}
         </p>
+        {locale !== 'zh-TW' && (
+          <p style={{ fontSize: 11, color: 'var(--color-warning)', marginTop: 4 }}>{tr.laborLawNote}</p>
+        )}
       </div>
 
       <div className="calc-body">
         {/* ── Inputs ── */}
         <div className="calc-inputs">
-          {/* 平均月投保薪資 */}
+          {/* Average Salary */}
           <div className="calc-field">
-            <label className="calc-label">最高60個月平均月投保薪資</label>
+            <label className="calc-label">{tr.avgSalary}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -104,13 +109,13 @@ export default function LaborInsurancePensionCalculator() {
               <span>45,800（上限）</span>
             </div>
             <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 6 }}>
-              2026 勞保最高投保薪資 45,800 元，超過部分以上限計算
+              {tr.salaryHint}
             </p>
           </div>
 
-          {/* 年資 */}
+          {/* Years */}
           <div className="calc-field">
-            <label className="calc-label">勞保投保年資</label>
+            <label className="calc-label">{tr.years}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -145,20 +150,20 @@ export default function LaborInsurancePensionCalculator() {
             )}
           </div>
 
-          {/* 領取方式 */}
+          {/* Mode */}
           <div className="calc-field">
-            <label className="calc-label">領取方式</label>
+            <label className="calc-label">{tr.modeLabel}</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 4 }}>
               {[
                 {
                   value: 'monthly',
-                  label: '月領老年年金',
-                  desc: '每月固定領取，活越久領越多；需年資滿15年',
+                  label: tr.modeMonthly,
+                  desc: locale === 'en' ? 'Monthly for life; requires 15+ years of coverage' : locale === 'ja' ? '終身月額受取；15年以上の加入が必要' : '每月固定領取，活越久領越多；需年資滿15年',
                 },
                 {
                   value: 'lump',
-                  label: '一次給付',
-                  desc: '一次領回全部金額；年資未滿15年只能選此項',
+                  label: tr.modeLump,
+                  desc: locale === 'en' ? 'One-time payout; required if coverage < 15 years' : locale === 'ja' ? '一括受取；15年未満の場合はこちらのみ' : '一次領回全部金額；年資未滿15年只能選此項',
                 },
               ].map((opt) => (
                 <label
@@ -210,7 +215,7 @@ export default function LaborInsurancePensionCalculator() {
               )}
               {/* 主要結果 */}
               <div className="result-primary">
-                <div className="result-label">每月可領（取A/B式較高）</div>
+                <div className="result-label">{tr.monthlyResult} {tr.takeHigher}</div>
                 <div className="result-value">{fmtCurrency(Math.round(result.monthly))}</div>
                 <div className="result-sublabel">/ 月，終身領取</div>
               </div>
@@ -225,10 +230,10 @@ export default function LaborInsurancePensionCalculator() {
                   }}
                 >
                   <div className="result-card-label">
-                    A 式 {result.a >= result.b && <span style={{ color: 'var(--color-accent)', marginLeft: 4 }}>✓ 採用</span>}
+                    {tr.aFormula} {result.a >= result.b && <span style={{ color: 'var(--color-accent)', marginLeft: 4 }}>✓</span>}
                   </div>
                   <div className="result-card-value">{fmtCurrency(Math.round(result.a))}</div>
-                  <div className="result-card-desc">薪資 × {years}年 × 0.775% + 3,000</div>
+                  <div className="result-card-desc">× {years}{tr.yearUnit} × 0.775% + 3,000</div>
                 </div>
                 <div
                   className="result-card"
@@ -238,35 +243,32 @@ export default function LaborInsurancePensionCalculator() {
                   }}
                 >
                   <div className="result-card-label">
-                    B 式 {result.b > result.a && <span style={{ color: 'var(--color-accent)', marginLeft: 4 }}>✓ 採用</span>}
+                    {tr.bFormula} {result.b > result.a && <span style={{ color: 'var(--color-accent)', marginLeft: 4 }}>✓</span>}
                   </div>
                   <div className="result-card-value">{fmtCurrency(Math.round(result.b))}</div>
-                  <div className="result-card-desc">薪資 × {years}年 × 1.55%</div>
+                  <div className="result-card-desc">× {years}{tr.yearUnit} × 1.55%</div>
                 </div>
               </div>
 
               {/* vs 一次領比較 */}
               <div style={{ marginTop: 24, padding: '16px', background: 'var(--color-bg)', borderRadius: 4, border: '0.5px solid var(--color-border)' }}>
-                <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 8 }}>vs 一次給付比較</div>
+                <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 8 }}>{tr.breakeven}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 13 }}>一次給付金額</span>
+                  <span style={{ fontSize: 13 }}>{tr.lumpResult}</span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 14, color: 'var(--color-text-primary)' }}>{fmtCurrency(result.lumpSum)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-                  <span style={{ fontSize: 13 }}>月領回本點</span>
+                  <span style={{ fontSize: 13 }}>{tr.breakeven}</span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 14, color: 'var(--color-accent)' }}>
-                    {result.breakeven > 0 ? `${result.breakeven} 個月（約 ${Math.ceil(result.breakeven / 12)} 年）後` : '—'}
+                    {result.breakeven > 0 ? tr.breakevenDesc(result.breakeven) : '—'}
                   </span>
                 </div>
-                <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 8 }}>
-                  月領超過 {result.breakeven} 個月（{Math.ceil(result.breakeven / 12)} 年）後，月領累積總額即超過一次給付
-                </p>
               </div>
             </>
           ) : (
             <>
               <div className="result-primary">
-                <div className="result-label">一次給付金額</div>
+                <div className="result-label">{tr.lumpResult}</div>
                 <div className="result-value">{fmtCurrency(result.lumpSum)}</div>
                 <div className="result-sublabel">退休時一次領回</div>
               </div>
@@ -307,7 +309,7 @@ export default function LaborInsurancePensionCalculator() {
 
           {/* Disclaimer */}
           <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 20, lineHeight: 1.6 }}>
-            ⚠️ 本試算僅供參考，以勞保局公告為準。實際給付依申請時條件計算，加保年資以勞保局紀錄為準。
+            {locale === 'zh-TW' ? '⚠️ 本試算僅供參考，以勞保局公告為準。實際給付依申請時條件計算，加保年資以勞保局紀錄為準。' : tr.laborLawNote}
           </p>
         </div>
       </div>

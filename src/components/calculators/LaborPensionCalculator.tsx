@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { laborPensionT, fmtWanLocale, type CalcLocale } from '../../i18n/calcTranslations';
 
 /* ─── Helpers ─── */
 const fmt = (n: number) =>
@@ -69,7 +70,8 @@ function calcLaborPension(
 }
 
 /* ─── Component ─── */
-export default function LaborPensionCalculator() {
+export default function LaborPensionCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = laborPensionT[(locale as CalcLocale)] ?? laborPensionT['zh-TW'];
   const [monthlySalary, setMonthlySalary] = useState(50000);
   const [selfRate, setSelfRate] = useState(0);   // 0-6%
   const [annualReturn, setAnnualReturn] = useState(3.0); // %
@@ -87,18 +89,21 @@ export default function LaborPensionCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>💼 勞退新制退休金試算</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          試算雇主提繳 6% + 自提比例，預估退休時累積金額與每月可領金額
+          {tr.note}
         </p>
+        {locale !== 'zh-TW' && (
+          <p style={{ fontSize: 11, color: 'var(--color-warning)', marginTop: 4 }}>{tr.laborLawNote}</p>
+        )}
       </div>
 
       <div className="calc-body">
         {/* ── Inputs ── */}
         <div className="calc-inputs">
-          {/* 月薪 */}
+          {/* Salary */}
           <div className="calc-field">
-            <label className="calc-label">每月薪資</label>
+            <label className="calc-label">{tr.monthlySalary}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -128,12 +133,12 @@ export default function LaborPensionCalculator() {
             </div>
           </div>
 
-          {/* 自提比例 */}
+          {/* Self Rate */}
           <div className="calc-field">
             <label className="calc-label">
-              勞退自提比例
+              {tr.selfRate}
               <span style={{ fontSize: 11, color: 'var(--color-accent)', marginLeft: 8 }}>
-                （自提享所得稅減除優惠）
+                {locale === 'en' ? '(tax-deductible)' : locale === 'ja' ? '（節税可）' : '（自提享所得稅減除優惠）'}
               </span>
             </label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -159,19 +164,19 @@ export default function LaborPensionCalculator() {
               style={{ width: '100%', marginTop: 8, accentColor: 'var(--color-accent)' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
-              <span>不自提</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{selfRate}%（每月 {fmt(Math.round(monthlySalary * selfRate / 100))} 元）</span>
-              <span>6%（上限）</span>
+              <span>0%</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{selfRate}%</span>
+              <span>6%</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, fontSize: 11, color: 'var(--color-text-muted)', background: 'var(--color-accent-bg)', padding: '8px 10px', borderRadius: 4 }}>
               <span>💡</span>
-              <span>雇主強制提繳 <strong>6%</strong>（{fmt(Math.round(monthlySalary * 0.06))} 元/月），自提部分可抵減個人綜合所得稅</span>
+              <span>{tr.employerNote}</span>
             </div>
           </div>
 
-          {/* 預期投報率 */}
+          {/* Annual Return */}
           <div className="calc-field">
-            <label className="calc-label">預期年投報率</label>
+            <label className="calc-label">{tr.annualReturn}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -204,9 +209,9 @@ export default function LaborPensionCalculator() {
             </p>
           </div>
 
-          {/* 距退休年數 */}
+          {/* Years to Retire */}
           <div className="calc-field">
-            <label className="calc-label">距退休年數</label>
+            <label className="calc-label">{tr.yearsToRetire}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -236,16 +241,16 @@ export default function LaborPensionCalculator() {
             </div>
           </div>
 
-          {/* 退休年齡 */}
+          {/* Retirement Age */}
           <div className="calc-field">
-            <label className="calc-label">預計退休年齡</label>
+            <label className="calc-label">{tr.retirementAge}</label>
             <select
               className="calc-select"
               value={retirementAge}
               onChange={(e) => setRetirementAge(Number(e.target.value))}
             >
               {[50, 55, 60, 65, 67, 70].map((a) => (
-                <option key={a} value={a}>{a} 歲</option>
+                <option key={a} value={a}>{a} {tr.yearUnit}</option>
               ))}
             </select>
             <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
@@ -262,45 +267,45 @@ export default function LaborPensionCalculator() {
             </span>
           </div>
 
-          {/* 每月提繳 */}
+          {/* Monthly contributions */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
             <div className="result-card">
-              <div className="result-card-label">雇主每月提繳</div>
+              <div className="result-card-label">{tr.employerNote}</div>
               <div className="result-card-value">{fmtCurrency(Math.round(result.employerContrib))}</div>
-              <div className="result-card-desc">薪資 × 6%</div>
+              <div className="result-card-desc">× 6%</div>
             </div>
             <div className="result-card">
-              <div className="result-card-label">自提金額</div>
+              <div className="result-card-label">{tr.selfNote(selfRate / 100)}</div>
               <div className="result-card-value">{fmtCurrency(Math.round(result.selfContrib))}</div>
-              <div className="result-card-desc">薪資 × {selfRate}%</div>
+              <div className="result-card-desc">× {selfRate}%</div>
             </div>
           </div>
 
-          {/* 主結果 */}
+          {/* Main result */}
           <div className="result-primary">
-            <div className="result-label">退休累積總額（{yearsToRetire}年後）</div>
-            <div className="result-value">{fmtWan(result.totalAccumulated)}</div>
-            <div className="result-sublabel">年投報 {annualReturn}% 複利計算</div>
+            <div className="result-label">{tr.totalAccumulated}</div>
+            <div className="result-value">{fmtWanLocale(result.totalAccumulated, locale as CalcLocale)}</div>
+            <div className="result-sublabel">{annualReturn}% {locale === 'en' ? 'annual compound return' : locale === 'ja' ? '年間複利' : '年投報複利計算'}</div>
           </div>
 
-          {/* 每月可領 */}
+          {/* Monthly pension */}
           <div style={{ marginTop: 16, padding: '16px', background: 'var(--color-accent-bg)', borderRadius: 4, border: '0.5px solid var(--color-accent)' }}>
-            <div style={{ fontSize: 12, color: 'var(--color-accent)', marginBottom: 4, fontFamily: 'var(--font-mono)', letterSpacing: '1px', textTransform: 'uppercase' }}>月領金額試算</div>
+            <div style={{ fontSize: 12, color: 'var(--color-accent)', marginBottom: 4, fontFamily: 'var(--font-mono)', letterSpacing: '1px', textTransform: 'uppercase' }}>{tr.monthlyPension}</div>
             <div style={{ fontSize: 28, fontWeight: 300, color: 'var(--color-text-primary)' }}>
               {fmtCurrency(Math.round(result.monthlyBenefit))}
             </div>
             <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
-              以退休年齡 {retirementAge} 歲、預估餘命 {result.lifeExpectancy} 年（{result.annuityMonths} 個月）計算
+              {retirementAge}{tr.yearUnit}, {result.lifeExpectancy} {locale === 'en' ? 'yr life expectancy' : locale === 'ja' ? '年余命' : '年餘命'} ({result.annuityMonths} {locale === 'en' ? 'mo' : locale === 'ja' ? 'ヶ月' : '個月'})
             </div>
           </div>
 
-          {/* 明細 */}
+          {/* Details */}
           <div style={{ marginTop: 16 }}>
             {[
-              { label: '每月總提繳（雇主+自提）', value: fmtCurrency(Math.round(result.monthlyContribution)) },
-              { label: `${yearsToRetire}年總提繳本金`, value: fmtCurrency(Math.round(result.totalContributed)) },
-              { label: '投資報酬（複利增值）', value: fmtCurrency(Math.round(result.investmentGain)) },
-              { label: '總報酬率', value: `${result.totalReturnRate.toFixed(1)}%` },
+              { label: locale === 'en' ? 'Monthly Total Contribution' : locale === 'ja' ? '月間総拠出額' : '每月總提繳（雇主+自提）', value: fmtCurrency(Math.round(result.monthlyContribution)) },
+              { label: `${yearsToRetire} ${tr.yearUnit} ${tr.totalContributed}`, value: fmtCurrency(Math.round(result.totalContributed)) },
+              { label: tr.investmentGain, value: fmtCurrency(Math.round(result.investmentGain)) },
+              { label: locale === 'en' ? 'Total Return' : locale === 'ja' ? '総収益率' : '總報酬率', value: `${result.totalReturnRate.toFixed(1)}%` },
             ].map((row) => (
               <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '0.5px solid var(--color-border)' }}>
                 <span style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>{row.label}</span>
@@ -310,7 +315,9 @@ export default function LaborPensionCalculator() {
           </div>
 
           <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 20, lineHeight: 1.6 }}>
-            ⚠️ 本試算採等薪複利計算（不含薪資成長）。實際勞退金額以勞動部勞退基金管理局個人帳戶餘額為準。月領金額係依預估餘命估算，非官方給付保證數字。
+            {locale === 'zh-TW'
+              ? '⚠️ 本試算採等薪複利計算（不含薪資成長）。實際勞退金額以勞動部勞退基金管理局個人帳戶餘額為準。月領金額係依預估餘命估算，非官方給付保證數字。'
+              : tr.laborLawNote}
           </p>
         </div>
       </div>

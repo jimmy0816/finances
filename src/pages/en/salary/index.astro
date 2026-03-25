@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SalaryCalculator from '../../../components/calculators/SalaryCalculator';
+import OvertimeCalculator from '../../../components/calculators/OvertimeCalculator';
+const locale = 'en';
+---
+<BaseLayout title="Taiwan Salary Calculator 2026 — Take-Home Pay + Overtime" description="Taiwan salary tools: take-home pay after labor insurance, health insurance, income tax. Overtime calculator for weekdays, rest days, holidays. 2026 rates." locale={locale}>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">Salary Tools</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Salary Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:560px;line-height:1.7;">
+        How much do you actually take home after Taiwan's deductions? Are your overtime calculations correct? Get the numbers here.
+      </p>
+      <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;">⚠️ Based on Taiwan's 2026 labor and tax laws. For Taiwan residents only.</p>
+    </div>
+  </section>
+
+  <!-- Navigation Cards -->
+  <section style="padding:48px 0 0;background:var(--color-bg);">
+    <div class="container">
+      <div class="tool-cards">
+        <a href="#salary-calculator" class="tool-card">
+          <span class="tool-icon">💰</span>
+          <h3>Take-Home Salary</h3>
+          <p>Enter gross salary and dependents to calculate deductions and monthly take-home.</p>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate →</span>
+        </a>
+        <a href="#overtime-calculator" class="tool-card">
+          <span class="tool-icon">⏰</span>
+          <h3>Overtime Pay</h3>
+          <p>Taiwan Labor Standards Act overtime: weekday, rest day, and holiday rates correctly calculated.</p>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculator 1 -->
+  <section id="salary-calculator" class="section" style="scroll-margin-top:64px;">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 01</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">Taiwan Take-Home Salary</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">2026 rates: Labor Insurance 12.5%, Health Insurance 5.17%, income tax withholding estimate</p>
+      </div>
+      <SalaryCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <!-- Calculator 2 -->
+  <section id="overtime-calculator" class="section" style="scroll-margin-top:64px;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;">CALCULATOR 02</div>
+        <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);letter-spacing:-0.5px;">Overtime Pay Calculator</h2>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin-top:6px;font-weight:300;">Taiwan Labor Standards Act Art. 24 & 39 — with rate reference table</p>
+      </div>
+      <OvertimeCalculator client:load locale={locale} />
+    </div>
+  </section>
+
+  <!-- Key Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);">
+    <div class="container">
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;">3 Things to Know About Taiwan Salary</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📋</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Insurance Uses Salary Brackets</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Labor and health insurance are calculated against bracketed salary levels, not raw salary. Labor insurance is capped at NT$45,800.
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⏱️</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Hourly Rate = Monthly ÷ 240</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Taiwan Labor Standards Act calculates hourly rate as monthly salary ÷ 240 (30 days × 8 hours). NT$40,000/month = ~NT$167/hour.
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⚡</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Rest Day vs. Statutory Holiday</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Taiwan gives 2 days off per week: rest day (flexible overtime allowed) and statutory holiday (overtime generally prohibited, highest rate if required).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

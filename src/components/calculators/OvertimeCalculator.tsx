@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { overtimeT, type CalcLocale } from '../../i18n/calcTranslations';
 
 /* ─── Helpers ─── */
 const fmt = (n: number) =>
@@ -88,7 +89,8 @@ function calcOvertime(
 }
 
 /* ─── Component ─── */
-export default function OvertimeCalculator() {
+export default function OvertimeCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = overtimeT[(locale as CalcLocale)] ?? overtimeT['zh-TW'];
   const [monthlySalary, setMonthlySalary] = useState(40000);
   const [weekdayHours, setWeekdayHours] = useState(2);
   const [restDayHours, setRestDayHours] = useState(4);
@@ -104,18 +106,21 @@ export default function OvertimeCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>⏰ 加班費計算器</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          依 2026 勞基法計算平日/休息日/例假日/國定假日加班費
+          {tr.note}
         </p>
+        {locale !== 'zh-TW' && (
+          <p style={{ fontSize: 11, color: 'var(--color-warning)', marginTop: 4 }}>{tr.laborLawNote}</p>
+        )}
       </div>
 
       <div className="calc-body">
         {/* ── Inputs ── */}
         <div className="calc-inputs">
-          {/* 月薪 */}
+          {/* Monthly Salary */}
           <div className="calc-field">
-            <label className="calc-label">月薪（稅前）</label>
+            <label className="calc-label">{tr.monthlySalary}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -144,15 +149,15 @@ export default function OvertimeCalculator() {
               <span>200,000</span>
             </div>
             <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
-              時薪 = 月薪 ÷ 240 = {fmt(Math.round(result.hourly))} 元 / 小時
+              {tr.hourlyWage} = {fmtCurrency(Math.round(result.hourly))}/{tr.hourUnit}
             </p>
           </div>
 
-          {/* 平日加班 */}
+          {/* Weekday OT */}
           <div className="calc-field">
             <label className="calc-label">
-              平日延長工時
-              <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginLeft: 8 }}>（一天最多 4 小時）</span>
+              {tr.weekdayOT1}
+              <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginLeft: 8 }}>(max 4 {tr.hourUnit})</span>
             </label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
@@ -186,11 +191,10 @@ export default function OvertimeCalculator() {
             )}
           </div>
 
-          {/* 休息日加班 */}
+          {/* Rest Day OT */}
           <div className="calc-field">
             <label className="calc-label">
-              休息日加班時數
-              <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginLeft: 8 }}>（不足2小時以2小時計）</span>
+              {tr.restDayHours}
             </label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
@@ -230,7 +234,7 @@ export default function OvertimeCalculator() {
           {/* 例假日 */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div className="calc-field">
-              <label className="calc-label">例假日出勤天數</label>
+              <label className="calc-label">{tr.holidayHours}</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   type="number"
@@ -249,7 +253,7 @@ export default function OvertimeCalculator() {
               </div>
             </div>
             <div className="calc-field">
-              <label className="calc-label">國定假日出勤天數</label>
+              <label className="calc-label">{tr.holidayHours} (National)</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   type="number"
@@ -278,39 +282,39 @@ export default function OvertimeCalculator() {
             </span>
           </div>
 
-          {/* 主結果 */}
+          {/* Main result */}
           <div className="result-primary">
-            <div className="result-label">本期加班費合計</div>
+            <div className="result-label">{tr.totalOT}</div>
             <div className="result-value">{fmtCurrency(Math.round(result.totalOT))}</div>
-            <div className="result-sublabel">時薪 {fmtCurrency(Math.round(result.hourly))} × 加班時數</div>
+            <div className="result-sublabel">{tr.hourlyWage} {fmtCurrency(Math.round(result.hourly))} × {tr.hourUnit}</div>
           </div>
 
-          {/* 明細 */}
+          {/* Details */}
           <div style={{ marginTop: 20 }}>
             {[
               {
-                label: '平日延長工時',
-                sub: weekdayHours > 0 ? `${weekdayHours} 小時（前2h×133% + 後2h×167%）` : '未填寫',
+                label: tr.weekdayOT1Result,
+                sub: weekdayHours > 0 ? `${weekdayHours} ${tr.hourUnit} (1-2h×133% + 3-4h×167%)` : (locale === 'en' ? 'Not entered' : locale === 'ja' ? '未入力' : '未填寫'),
                 amount: result.weekdayOT,
                 show: true,
               },
               {
-                label: '休息日加班',
+                label: tr.restDayResult,
                 sub: restDayHours > 0
-                  ? `實際 ${restDayHours}h，計費 ${result.restDayBilledHours}h（前2h×133% / 3-8h×167%）`
-                  : '未填寫',
+                  ? `${restDayHours}h (min 2h) ×133%/167%/267%`
+                  : (locale === 'en' ? 'Not entered' : locale === 'ja' ? '未入力' : '未填寫'),
                 amount: result.restDayOT,
                 show: true,
               },
               {
-                label: '例假日出勤',
-                sub: holidayDays > 0 ? `${holidayDays} 天 × 日薪（加發）` : '未填寫',
+                label: tr.holidayResult,
+                sub: holidayDays > 0 ? `${holidayDays}d × 200%` : (locale === 'en' ? 'Not entered' : locale === 'ja' ? '未入力' : '未填寫'),
                 amount: result.holidayOT,
                 show: true,
               },
               {
-                label: '國定假日出勤',
-                sub: nationalHolidayDays > 0 ? `${nationalHolidayDays} 天 × 日薪（加發）` : '未填寫',
+                label: tr.holidayResult + ' (National)',
+                sub: nationalHolidayDays > 0 ? `${nationalHolidayDays}d × 200%` : (locale === 'en' ? 'Not entered' : locale === 'ja' ? '未入力' : '未填寫'),
                 amount: result.nationalHolidayOT,
                 show: true,
               },
@@ -371,7 +375,9 @@ export default function OvertimeCalculator() {
           </div>
 
           <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 20, lineHeight: 1.6 }}>
-            ⚠️ 依勞基法第 24 條及第 39 條規定計算。例假日出勤原則上禁止，雇主需有正當理由。本試算僅供參考，實際加班費依勞動契約及主管機關解釋為準。
+            {locale === 'zh-TW'
+              ? '⚠️ 依勞基法第 24 條及第 39 條規定計算。例假日出勤原則上禁止，雇主需有正當理由。本試算僅供參考，實際加班費依勞動契約及主管機關解釋為準。'
+              : tr.laborLawNote}
           </p>
         </div>
       </div>

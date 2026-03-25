@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { retirementGapT, fmtWanLocale, type CalcLocale } from '../../i18n/calcTranslations';
 
 /* ─── Helpers ─── */
 const fmt = (n: number) =>
@@ -93,7 +94,8 @@ function calcRetirementGap(
 }
 
 /* ─── Component ─── */
-export default function RetirementGapCalculator() {
+export default function RetirementGapCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = retirementGapT[(locale as CalcLocale)] ?? retirementGapT['zh-TW'];
   const [currentAge, setCurrentAge] = useState(35);
   const [retireAge, setRetireAge] = useState(65);
   const [lifeExpectancy, setLifeExpectancy] = useState(85);
@@ -119,10 +121,15 @@ export default function RetirementGapCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>📊 退休金缺口計算</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          設定退休目標與生活費，計算退休資金需求與每月需儲蓄金額
+          {tr.headerDesc}
         </p>
+        {locale !== 'zh-TW' && (
+          <p style={{ fontSize: 11, color: 'var(--color-warning)', marginTop: 4 }}>
+            ⚠️ {locale === 'en' ? 'Based on Taiwan\'s retirement planning context.' : '台湾の退職計画に基づいています。'}
+          </p>
+        )}
       </div>
 
       <div className="calc-body">
@@ -131,7 +138,7 @@ export default function RetirementGapCalculator() {
           {/* 年齡 */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div className="calc-field">
-              <label className="calc-label">目前年齡</label>
+              <label className="calc-label">{tr.currentAge}</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   type="number"
@@ -146,7 +153,7 @@ export default function RetirementGapCalculator() {
               </div>
             </div>
             <div className="calc-field">
-              <label className="calc-label">預計退休年齡</label>
+              <label className="calc-label">{tr.retireAge}</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   type="number"
@@ -162,9 +169,9 @@ export default function RetirementGapCalculator() {
             </div>
           </div>
 
-          {/* 預期壽命 */}
+          {/* Life Expectancy */}
           <div className="calc-field">
-            <label className="calc-label">預期壽命</label>
+            <label className="calc-label">{tr.lifeExpectancy}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -196,9 +203,9 @@ export default function RetirementGapCalculator() {
             </p>
           </div>
 
-          {/* 退休月花費 */}
+          {/* Monthly Expense */}
           <div className="calc-field">
-            <label className="calc-label">退休後每月生活費（今日幣值）</label>
+            <label className="calc-label">{tr.monthlyExpense}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -233,9 +240,9 @@ export default function RetirementGapCalculator() {
             )}
           </div>
 
-          {/* 預計退休金來源 */}
+          {/* Monthly Pension */}
           <div className="calc-field">
-            <label className="calc-label">預計每月退休金（勞保+勞退，今日估算）</label>
+            <label className="calc-label">{tr.monthlyPension}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -254,9 +261,9 @@ export default function RetirementGapCalculator() {
             </p>
           </div>
 
-          {/* 目前積蓄 */}
+          {/* Current Savings */}
           <div className="calc-field">
-            <label className="calc-label">目前已有積蓄</label>
+            <label className="calc-label">{tr.currentSavings}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -289,7 +296,7 @@ export default function RetirementGapCalculator() {
           {/* 通膨 & 投報率 */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div className="calc-field">
-              <label className="calc-label">年通膨率</label>
+              <label className="calc-label">{tr.inflation}</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   type="number"
@@ -306,7 +313,7 @@ export default function RetirementGapCalculator() {
               <p style={{ fontSize: 10, color: 'var(--color-text-muted)', marginTop: 4 }}>台灣長期均值約 2%</p>
             </div>
             <div className="calc-field">
-              <label className="calc-label">年投資報酬率</label>
+              <label className="calc-label">{tr.returnRate}</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input
                   type="number"
@@ -333,46 +340,50 @@ export default function RetirementGapCalculator() {
             </span>
           </div>
 
-          {/* 缺口主結果 */}
+          {/* Gap main result */}
           <div
             className="result-primary"
             style={{ borderLeft: `4px solid ${gapColor}` }}
           >
             <div className="result-label">
-              {result.gap <= 0 ? '✅ 退休金已足夠' : '⚠️ 退休金缺口'}
+              {result.gap <= 0 ? `✅ ${tr.noGap}` : `⚠️ ${tr.gap}`}
             </div>
             <div className="result-value" style={{ color: gapColor }}>
-              {result.gap <= 0 ? fmtWan(result.totalAvailable - result.totalNeed) + ' 盈餘' : fmtWan(result.gap)}
+              {result.gap <= 0
+                ? fmtWanLocale(result.totalAvailable - result.totalNeed, locale as CalcLocale)
+                : fmtWanLocale(result.gap, locale as CalcLocale)}
             </div>
             <div className="result-sublabel">
               {result.gap > 0
-                ? `尚缺 ${result.gapPercent.toFixed(0)}%，需額外補足`
-                : '目前資源已可支應退休需求'}
+                ? (locale === 'en' ? `${result.gapPercent.toFixed(0)}% shortfall` : locale === 'ja' ? `${result.gapPercent.toFixed(0)}% 不足` : `尚缺 ${result.gapPercent.toFixed(0)}%，需額外補足`)
+                : (locale === 'en' ? 'Sufficient for retirement' : locale === 'ja' ? '退職資金は十分です' : '目前資源已可支應退休需求')}
             </div>
           </div>
 
-          {/* 每月需存 */}
+          {/* Monthly needed */}
           {result.gap > 0 && result.yearsToRetire > 0 && (
             <div style={{ marginTop: 16, padding: '16px', background: 'var(--color-accent-bg)', borderRadius: 4, border: `0.5px solid var(--color-accent)` }}>
-              <div style={{ fontSize: 12, color: 'var(--color-accent)', marginBottom: 4, fontFamily: 'var(--font-mono)', letterSpacing: '1px' }}>每月需額外儲蓄</div>
+              <div style={{ fontSize: 12, color: 'var(--color-accent)', marginBottom: 4, fontFamily: 'var(--font-mono)', letterSpacing: '1px' }}>{tr.monthlyNeeded}</div>
               <div style={{ fontSize: 28, fontWeight: 300, color: 'var(--color-text-primary)' }}>
                 {fmtCurrency(Math.round(result.monthlyRequired))}
               </div>
               <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
-                以年報酬率 {returnRate}%、工作 {result.yearsToRetire} 年計算
+                {returnRate}% × {result.yearsToRetire} {locale === 'en' ? 'yr' : locale === 'ja' ? '年' : '年'}
               </div>
             </div>
           )}
 
-          {/* 明細表 */}
+          {/* Details table */}
           <div style={{ marginTop: 20 }}>
-            <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 12, fontFamily: 'var(--font-mono)', letterSpacing: '1px' }}>資金明細</div>
+            <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 12, fontFamily: 'var(--font-mono)', letterSpacing: '1px' }}>
+              {locale === 'en' ? 'Fund Details' : locale === 'ja' ? '資金内訳' : '資金明細'}
+            </div>
             {[
-              { label: '退休總需求', value: fmtWan(result.totalNeed), sub: `${result.retirementYears}年 × 通膨調整` },
-              { label: '4% 法則參考需求', value: fmtWan(result.rule4pct), sub: '月花費×12÷4%' },
-              { label: '現有積蓄（未來值）', value: fmtWan(result.savingsFV), sub: `${retireAge}歲時` },
-              { label: '退休金收入（勞保+勞退）', value: fmtWan(result.pensionPV), sub: `${result.retirementMonths}個月總額` },
-              { label: '總可用資源', value: fmtWan(result.totalAvailable), sub: '積蓄+退休金' },
+              { label: tr.totalNeeded, value: fmtWanLocale(result.totalNeed, locale as CalcLocale), sub: `${result.retirementYears} yr` },
+              { label: locale === 'en' ? '4% Rule Reference' : locale === 'ja' ? '4%ルール参考値' : '4% 法則參考需求', value: fmtWanLocale(result.rule4pct, locale as CalcLocale), sub: 'exp×12÷4%' },
+              { label: tr.existingCover, value: fmtWanLocale(result.savingsFV, locale as CalcLocale), sub: `@ ${retireAge}` },
+              { label: tr.monthlyPension, value: fmtWanLocale(result.pensionPV, locale as CalcLocale), sub: `${result.retirementMonths} mo` },
+              { label: locale === 'en' ? 'Total Available' : locale === 'ja' ? '利用可能総額' : '總可用資源', value: fmtWanLocale(result.totalAvailable, locale as CalcLocale), sub: '' },
             ].map((row) => (
               <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 0', borderBottom: '0.5px solid var(--color-border)' }}>
                 <div>
@@ -384,28 +395,28 @@ export default function RetirementGapCalculator() {
             ))}
           </div>
 
-          {/* 時間軸 */}
+          {/* Timeline */}
           <div style={{ marginTop: 20, padding: '12px 16px', background: 'var(--color-bg)', borderRadius: 4, border: '0.5px solid var(--color-border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--color-text-muted)' }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 16, color: 'var(--color-accent)' }}>今年</div>
-                <div>{currentAge} 歲</div>
+                <div style={{ fontSize: 16, color: 'var(--color-accent)' }}>{locale === 'en' ? 'Now' : locale === 'ja' ? '現在' : '今年'}</div>
+                <div>{currentAge}{tr.yearUnit}</div>
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 16, color: 'var(--color-text-primary)' }}>→</div>
-                <div style={{ fontSize: 10 }}>工作 {result.yearsToRetire} 年</div>
+                <div style={{ fontSize: 10 }}>{result.yearsToRetire} {locale === 'en' ? 'yr' : locale === 'ja' ? '年' : '年'}</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 16, color: 'var(--color-accent)' }}>退休</div>
-                <div>{retireAge} 歲</div>
+                <div style={{ fontSize: 16, color: 'var(--color-accent)' }}>{locale === 'en' ? 'Retire' : locale === 'ja' ? '退職' : '退休'}</div>
+                <div>{retireAge}{tr.yearUnit}</div>
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 16, color: 'var(--color-text-primary)' }}>→</div>
-                <div style={{ fontSize: 10 }}>退休 {result.retirementYears} 年</div>
+                <div style={{ fontSize: 10 }}>{result.retirementYears} {locale === 'en' ? 'yr' : locale === 'ja' ? '年' : '年'}</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 16, color: 'var(--color-accent)' }}>終點</div>
-                <div>{lifeExpectancy} 歲</div>
+                <div style={{ fontSize: 16, color: 'var(--color-accent)' }}>{locale === 'en' ? 'End' : locale === 'ja' ? '終点' : '終點'}</div>
+                <div>{lifeExpectancy}{tr.yearUnit}</div>
               </div>
             </div>
           </div>

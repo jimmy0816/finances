@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { affordabilityT, fmtWanLocale, type CalcLocale } from '../../i18n/calcTranslations';
 
 /* ── Helpers ── */
 const fmt = (n: number) =>
@@ -66,14 +67,14 @@ function calcAffordability(
   };
 }
 
-const safeConfig: Record<SafeLevel, { label: string; icon: string; color: string; bg: string }> = {
-  safe: { label: '安全範圍', icon: '🟢', color: '#2D6A4F', bg: '#E8F5EE' },
-  caution: { label: '建議注意', icon: '🟡', color: '#B45309', bg: '#FEF3C7' },
-  danger: { label: '壓力過高', icon: '🔴', color: '#991B1B', bg: '#FEE2E2' },
-};
-
 /* ── Component ── */
-export default function AffordabilityCalculator() {
+export default function AffordabilityCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = affordabilityT[(locale as CalcLocale)] ?? affordabilityT['zh-TW'];
+  const safeConfig: Record<SafeLevel, { label: string; icon: string; color: string; bg: string; desc: string }> = {
+    safe: { label: tr.safeTag, icon: '🟢', color: '#2D6A4F', bg: '#E8F5EE', desc: tr.safeDesc },
+    caution: { label: tr.cautionTag, icon: '🟡', color: '#B45309', bg: '#FEF3C7', desc: tr.cautionDesc },
+    danger: { label: tr.dangerTag, icon: '🔴', color: '#991B1B', bg: '#FEE2E2', desc: tr.dangerDesc },
+  };
   const [monthlyIncome, setMonthlyIncome] = useState(100000);
   const [monthlyExpenses, setMonthlyExpenses] = useState(30000);
   const [downpayWan, setDownpayWan] = useState(300);
@@ -96,9 +97,9 @@ export default function AffordabilityCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>🏠 購屋能力評估</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          根據你的收入與支出，計算可以負擔多少總價的房子
+          {tr.headerDesc}
         </p>
       </div>
 
@@ -106,9 +107,9 @@ export default function AffordabilityCalculator() {
       <div className="calc-body">
         {/* ── Inputs ── */}
         <div className="calc-inputs">
-          {/* 家庭月收入 */}
+          {/* Monthly Income */}
           <div className="calc-field">
-            <label className="calc-label">家庭月收入</label>
+            <label className="calc-label">{tr.monthlyIncome}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>NT$</span>
               <input
@@ -132,15 +133,15 @@ export default function AffordabilityCalculator() {
               style={{ width: '100%', marginTop: 8, accentColor: 'var(--color-accent)' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
-              <span>2萬</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>月收 {fmtWan(monthlyIncome)}</span>
-              <span>50萬</span>
+              <span>{fmtWanLocale(20000, locale as CalcLocale)}</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{fmtWanLocale(monthlyIncome, locale as CalcLocale)}</span>
+              <span>{fmtWanLocale(500000, locale as CalcLocale)}</span>
             </div>
           </div>
 
-          {/* 每月固定支出 */}
+          {/* Monthly Expenses */}
           <div className="calc-field">
-            <label className="calc-label">每月固定支出（不含房貸）</label>
+            <label className="calc-label">{tr.monthlyExpenses}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>NT$</span>
               <input
@@ -165,14 +166,14 @@ export default function AffordabilityCalculator() {
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
               <span>0</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>支出 NT$ {fmt(monthlyExpenses)}</span>
-              <span>{fmtWan(Math.min(monthlyIncome, 200000))}</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>NT$ {fmt(monthlyExpenses)}</span>
+              <span>{fmtWanLocale(Math.min(monthlyIncome, 200000), locale as CalcLocale)}</span>
             </div>
           </div>
 
-          {/* 自備款 */}
+          {/* Down Payment */}
           <div className="calc-field">
-            <label className="calc-label">自備款金額</label>
+            <label className="calc-label">{tr.downpay}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -184,7 +185,7 @@ export default function AffordabilityCalculator() {
                 onChange={(e) => setDownpayWan(Number(e.target.value))}
                 style={{ flex: 1 }}
               />
-              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>萬元</span>
+              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>{tr.loanUnit}</span>
             </div>
             <input
               type="range"
@@ -196,29 +197,29 @@ export default function AffordabilityCalculator() {
               style={{ width: '100%', marginTop: 8, accentColor: 'var(--color-accent)' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
-              <span>0萬</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>自備 {fmt(downpayWan)} 萬</span>
-              <span>3000萬</span>
+              <span>0</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{fmtWanLocale(downpayWan * 10000, locale as CalcLocale)}</span>
+              <span>{fmtWanLocale(30000 * 10000, locale as CalcLocale)}</span>
             </div>
           </div>
 
-          {/* 貸款年期 */}
+          {/* Loan Term */}
           <div className="calc-field">
-            <label className="calc-label">期望貸款年期</label>
+            <label className="calc-label">{tr.loanYears}</label>
             <select
               className="calc-select"
               value={loanYears}
               onChange={(e) => setLoanYears(Number(e.target.value))}
             >
               {[20, 25, 30, 40].map((y) => (
-                <option key={y} value={y}>{y} 年</option>
+                <option key={y} value={y}>{y} {tr.yearUnit}</option>
               ))}
             </select>
           </div>
 
-          {/* 年利率 */}
+          {/* Annual Rate */}
           <div className="calc-field">
-            <label className="calc-label">預估年利率</label>
+            <label className="calc-label">{tr.annualRate}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -243,14 +244,14 @@ export default function AffordabilityCalculator() {
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
               <span>0.5%</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{annualRate.toFixed(2)}%</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{tr.rateInputHint(annualRate)}</span>
               <span>6%</span>
             </div>
           </div>
 
-          {/* 月還款上限比例 */}
+          {/* Max Payment Ratio */}
           <div className="calc-field">
-            <label className="calc-label">月還款佔收入上限比例</label>
+            <label className="calc-label">{tr.maxRatio}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -275,7 +276,7 @@ export default function AffordabilityCalculator() {
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
               <span>10%</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{maxRatio}%（建議 33%）</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{maxRatio}%</span>
               <span>60%</span>
             </div>
           </div>
@@ -285,11 +286,11 @@ export default function AffordabilityCalculator() {
         <div className="calc-results">
           {/* Big number */}
           <div style={{ marginBottom: 20 }}>
-            <div className="result-label">你可以負擔約</div>
+            <div className="result-label">{tr.maxHousePrice}</div>
             <div className="result-big">
-              {result.maxHousePrice > 0 ? fmtWan(result.maxHousePrice) : '—'}
+              {result.maxHousePrice > 0 ? fmtWanLocale(result.maxHousePrice, locale as CalcLocale) : '—'}
             </div>
-            <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4 }}>的房子</div>
+            <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4 }}>&nbsp;</div>
           </div>
 
           {/* Safety indicator */}
@@ -309,9 +310,7 @@ export default function AffordabilityCalculator() {
             <div>
               <div style={{ fontSize: 13, fontWeight: 500, color: safe.color }}>{safe.label}</div>
               <div style={{ fontSize: 11, color: safe.color, opacity: 0.8, marginTop: 2 }}>
-                {result.safeLevel === 'safe' && '還款負擔合理，財務壓力可控'}
-                {result.safeLevel === 'caution' && '接近上限，建議保留緩衝空間'}
-                {result.safeLevel === 'danger' && '負擔過重，建議重新評估購屋條件'}
+                {safe.desc}
               </div>
             </div>
           </div>
@@ -319,17 +318,17 @@ export default function AffordabilityCalculator() {
           {/* Summary rows */}
           <div style={{ borderTop: '0.5px solid var(--color-border)', paddingTop: 16 }}>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>建議最大貸款</span>
-              <span style={{ fontWeight: 500 }}>{result.maxLoan > 0 ? fmtWan(result.maxLoan) : '—'}</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.maxLoan}</span>
+              <span style={{ fontWeight: 500 }}>{result.maxLoan > 0 ? fmtWanLocale(result.maxLoan, locale as CalcLocale) : '—'}</span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>每月房貸還款</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.safeMonthly}</span>
               <span style={{ fontWeight: 500, color: 'var(--color-accent)' }}>
                 {result.monthlyPayment > 0 ? `NT$ ${fmt(Math.round(result.monthlyPayment))}` : '—'}
               </span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>還款佔月收入</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.debtRatio}</span>
               <span
                 style={{
                   fontWeight: 500,
@@ -340,17 +339,13 @@ export default function AffordabilityCalculator() {
               </span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>自備款 / 總價</span>
-              <span>{downpayWan} 萬 / {result.maxHousePrice > 0 ? fmtWan(result.maxHousePrice) : '—'}</span>
-            </div>
-            <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>貸款成數（LTV）</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>LTV</span>
               <span>{ltvRatio}%</span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>預估總利息支出</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.totalInterest}</span>
               <span style={{ color: 'var(--color-warning)' }}>
-                {result.totalInterest > 0 ? fmtWan(result.totalInterest) : '—'}
+                {result.totalInterest > 0 ? fmtWanLocale(result.totalInterest, locale as CalcLocale) : '—'}
               </span>
             </div>
           </div>
@@ -359,21 +354,17 @@ export default function AffordabilityCalculator() {
           {monthlyIncome > 0 && (
             <div style={{ marginTop: 20 }}>
               <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 8 }}>
-                月收入分配示意
+                {locale === 'en' ? 'Monthly income allocation' : locale === 'ja' ? '月収配分' : '月收入分配示意'}
               </div>
               <div style={{ height: 12, background: '#E8DDD0', borderRadius: 6, overflow: 'hidden', display: 'flex' }}>
-                {/* Expenses */}
                 <div
-                  title={`固定支出 ${((monthlyExpenses / monthlyIncome) * 100).toFixed(0)}%`}
                   style={{
                     width: `${Math.min(100, (monthlyExpenses / monthlyIncome) * 100)}%`,
                     background: '#D8CDBE',
                     transition: 'width 300ms ease',
                   }}
                 />
-                {/* Mortgage */}
                 <div
-                  title={`房貸 ${(result.debtRatio * 100).toFixed(0)}%`}
                   style={{
                     width: `${Math.min(100 - (monthlyExpenses / monthlyIncome) * 100, result.debtRatio * 100)}%`,
                     background: 'var(--color-accent)',
@@ -382,25 +373,25 @@ export default function AffordabilityCalculator() {
                 />
               </div>
               <div style={{ display: 'flex', gap: 16, marginTop: 6, fontSize: 11, color: 'var(--color-text-muted)' }}>
-                <span>■ 固定支出 {((monthlyExpenses / monthlyIncome) * 100).toFixed(0)}%</span>
-                <span style={{ color: 'var(--color-accent)' }}>■ 房貸 {(result.debtRatio * 100).toFixed(0)}%</span>
-                <span>■ 剩餘 {Math.max(0, 100 - ((monthlyExpenses / monthlyIncome) * 100) - (result.debtRatio * 100)).toFixed(0)}%</span>
+                <span>■ {locale === 'en' ? 'Expenses' : locale === 'ja' ? '支出' : '固定支出'} {((monthlyExpenses / monthlyIncome) * 100).toFixed(0)}%</span>
+                <span style={{ color: 'var(--color-accent)' }}>■ {locale === 'en' ? 'Mortgage' : locale === 'ja' ? '住宅ローン' : '房貸'} {(result.debtRatio * 100).toFixed(0)}%</span>
+                <span>■ {locale === 'en' ? 'Remaining' : locale === 'ja' ? '残り' : '剩餘'} {Math.max(0, 100 - ((monthlyExpenses / monthlyIncome) * 100) - (result.debtRatio * 100)).toFixed(0)}%</span>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* ── 安全指標說明 ── */}
+      {/* ── Safety indicators ── */}
       <div style={{ padding: '24px 32px 32px', borderTop: '0.5px solid var(--color-border)', background: 'var(--color-bg)' }}>
         <h3 style={{ fontSize: 14, fontWeight: 500, marginBottom: 16, color: 'var(--color-text-primary)' }}>
-          📌 還款負擔安全指標
+          📌 {locale === 'en' ? 'Payment-to-Income Safety Guide' : locale === 'ja' ? '返済比率安全目安' : '還款負擔安全指標'}
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
           {[
-            { icon: '🟢', range: '< 30%', label: '安全', desc: '財務彈性高，建議區間', color: '#2D6A4F', bg: '#E8F5EE' },
-            { icon: '🟡', range: '30–40%', label: '注意', desc: '尚可接受，需保留備用金', color: '#B45309', bg: '#FEF3C7' },
-            { icon: '🔴', range: '> 40%', label: '危險', desc: '壓力過大，風險偏高', color: '#991B1B', bg: '#FEE2E2' },
+            { icon: '🟢', range: '< 30%', label: tr.safeTag, desc: tr.safeDesc, color: '#2D6A4F', bg: '#E8F5EE' },
+            { icon: '🟡', range: '30–40%', label: tr.cautionTag, desc: tr.cautionDesc, color: '#B45309', bg: '#FEF3C7' },
+            { icon: '🔴', range: '> 40%', label: tr.dangerTag, desc: tr.dangerDesc, color: '#991B1B', bg: '#FEE2E2' },
           ].map((item) => (
             <div
               key={item.label}
@@ -420,7 +411,11 @@ export default function AffordabilityCalculator() {
           ))}
         </div>
         <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 16, lineHeight: 1.7 }}>
-          * 上述比例為月還款金額佔家庭月收入比例。銀行通常以「月付 ÷ 月收入 ≤ 40%」為授貸上限。建議自行預留緩衝，以 30–33% 為目標較為穩健。
+          {locale === 'en'
+            ? '* Ratio = monthly mortgage payment ÷ household income. Banks typically cap at 40%. A 30–33% target is more conservative.'
+            : locale === 'ja'
+            ? '* 返済比率 = 月返済額 ÷ 世帯月収。銀行は通常40%を上限とします。30〜33%を目標とすることが安全です。'
+            : '* 上述比例為月還款金額佔家庭月收入比例。銀行通常以「月付 ÷ 月收入 ≤ 40%」為授貸上限。建議自行預留緩衝，以 30–33% 為目標較為穩健。'}
         </p>
       </div>
     </div>

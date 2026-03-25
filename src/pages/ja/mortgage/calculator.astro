@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import MortgageCalculator from '../../../components/calculators/MortgageCalculator';
+const locale = 'ja';
+---
+<BaseLayout title="住宅ローン計算機 — 台湾" description="台湾の住宅ローン月返済額計算。元利均等・元金均等・据置期間対応。返済スケジュール付き。" locale={locale}>
+  <div class="page-header" style="padding:48px 40px 40px;border-bottom:0.5px solid #E8DDD0;">
+    <h1 style="font-family:var(--font-display);font-size:40px;font-weight:300;text-transform:uppercase;letter-spacing:2px;">住宅ローン計算</h1>
+    <p style="font-size:15px;color:#8A7E72;line-height:1.7;max-width:520px;font-weight:300;margin-top:12px;">借入条件を入力して月返済額・総利息・全返済スケジュールを計算。</p>
+  </div>
+  <div style="padding:40px;max-width:1080px;margin:0 auto;">
+    <MortgageCalculator client:load locale={locale} />
+  </div>
+</BaseLayout>

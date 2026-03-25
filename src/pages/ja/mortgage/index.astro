@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { localePath } from '../../../i18n/utils';
+const locale = 'ja';
+---
+<BaseLayout title="台湾住宅ローン計算ツール" description="台湾の住宅ローンツール：月返済額計算・繰り上げ返済分析・購入可能額評価。" locale={locale}>
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">住宅ローンツール</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Mortgage Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:520px;line-height:1.7;">
+        3つのツールで住宅ローンを完全理解：月返済額・繰り上げ返済効果・購入可能額。
+      </p>
+    </div>
+  </section>
+
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <div class="tool-cards">
+        <a href={localePath(locale, '/mortgage/calculator/')} class="tool-card">
+          <span class="tool-icon">🧮</span>
+          <h3>月返済額計算</h3>
+          <p>借入金額・金利・期間を入力。月返済額・総利息・全返済スケジュールを取得。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+        <a href={localePath(locale, '/mortgage/prepay/')} class="tool-card">
+          <span class="tool-icon">⏩</span>
+          <h3>繰り上げ返済計算</h3>
+          <p>一括または毎月追加返済でどれだけ利息を節約し、何年早く完済できるか計算。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+        <a href={localePath(locale, '/mortgage/affordability/')} class="tool-card">
+          <span class="tool-icon">🏠</span>
+          <h3>購入可能額計算</h3>
+          <p>収入・支出・頭金から最大借入額と購入可能な住宅価格を計算。</p>
+          <span class="tool-card-link" style="margin-top:20px;">計算する →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

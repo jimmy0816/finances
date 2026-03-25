@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
+import { mortgageT, type CalcLocale } from '../../i18n/calcTranslations';
 
 /* ── Types ── */
 type RepaymentMethod = 'equalPayment' | 'equalPrincipal';
@@ -130,15 +131,15 @@ function calculate(
 }
 
 /* ── Chart data (sampled monthly) ── */
-function buildChartData(schedule: AmortizationRow[]) {
+function buildChartData(schedule: AmortizationRow[], principalKey: string, interestKey: string) {
   // For large schedules, sample every 3 months to keep chart readable
   const step = schedule.length > 120 ? 6 : schedule.length > 60 ? 3 : 1;
   return schedule
     .filter((_, i) => i % step === 0)
     .map((row) => ({
       month: row.month,
-      本金: Math.round(row.principal),
-      利息: Math.round(row.interest),
+      [principalKey]: Math.round(row.principal),
+      [interestKey]: Math.round(row.interest),
     }));
 }
 
@@ -154,7 +155,8 @@ function buildSimplifiedSchedule(schedule: AmortizationRow[]) {
 }
 
 /* ── Component ── */
-export default function MortgageCalculator() {
+export default function MortgageCalculator({ locale = 'zh-TW' }: { locale?: string }) {
+  const tr = mortgageT[(locale as CalcLocale)] ?? mortgageT['zh-TW'];
   const [loanWan, setLoanWan] = useState(1000);
   const [annualRate, setAnnualRate] = useState(2.1);
   const [years, setYears] = useState(30);
@@ -169,7 +171,7 @@ export default function MortgageCalculator() {
     [loanWan, annualRate, years, method, gracePeriod],
   );
 
-  const chartData = useMemo(() => buildChartData(result.schedule), [result.schedule]);
+  const chartData = useMemo(() => buildChartData(result.schedule, tr.chartPrincipal, tr.chartInterest), [result.schedule, tr.chartPrincipal, tr.chartInterest]);
   const simplifiedSchedule = useMemo(
     () => buildSimplifiedSchedule(result.schedule),
     [result.schedule],
@@ -190,7 +192,7 @@ export default function MortgageCalculator() {
           }}
         >
           <p style={{ marginBottom: 4, color: '#8A7E72', fontFamily: 'var(--font-mono)', fontSize: 11 }}>
-            第 {label} 月
+            {tr.tooltipMonth(label)}
           </p>
           {payload.map((p: any) => (
             <p key={p.name} style={{ color: p.fill, margin: '2px 0' }}>
@@ -207,9 +209,9 @@ export default function MortgageCalculator() {
     <div className="calc-container" style={{ maxWidth: '100%' }}>
       {/* Header */}
       <div className="calc-header">
-        <h2 style={{ fontWeight: 400 }}>🏠 房貸月付試算</h2>
+        <h2 style={{ fontWeight: 400 }}>{tr.header}</h2>
         <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4, fontWeight: 300 }}>
-          輸入貸款條件，即時計算每月還款、總利息與攤還明細
+          {tr.headerDesc}
         </p>
       </div>
 
@@ -217,9 +219,9 @@ export default function MortgageCalculator() {
       <div className="calc-body">
         {/* ── Inputs ── */}
         <div className="calc-inputs">
-          {/* 貸款金額 */}
+          {/* Loan Amount */}
           <div className="calc-field">
-            <label className="calc-label">貸款金額</label>
+            <label className="calc-label">{tr.loanAmount}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -231,7 +233,7 @@ export default function MortgageCalculator() {
                 onChange={(e) => setLoanWan(Number(e.target.value))}
                 style={{ flex: 1 }}
               />
-              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>萬元</span>
+              <span style={{ fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>{tr.loanUnit}</span>
             </div>
             <input
               type="range"
@@ -243,15 +245,15 @@ export default function MortgageCalculator() {
               style={{ width: '100%', marginTop: 8, accentColor: 'var(--color-accent)' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
-              <span>100萬</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{fmt(loanWan)} 萬</span>
-              <span>5000萬</span>
+              <span>{tr.loanMin}</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{tr.loanInputHint(loanWan)}</span>
+              <span>{tr.loanMax}</span>
             </div>
           </div>
 
-          {/* 年利率 */}
+          {/* Annual Rate */}
           <div className="calc-field">
-            <label className="calc-label">年利率</label>
+            <label className="calc-label">{tr.annualRate}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="number"
@@ -276,32 +278,32 @@ export default function MortgageCalculator() {
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)' }}>
               <span>1.0%</span>
-              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{annualRate.toFixed(2)}%</span>
+              <span style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{tr.rateInputHint(annualRate)}</span>
               <span>5.0%</span>
             </div>
           </div>
 
-          {/* 貸款年期 */}
+          {/* Loan Term */}
           <div className="calc-field">
-            <label className="calc-label">貸款年期</label>
+            <label className="calc-label">{tr.loanTerm}</label>
             <select
               className="calc-select"
               value={years}
               onChange={(e) => setYears(Number(e.target.value))}
             >
               {[10, 15, 20, 25, 30, 40].map((y) => (
-                <option key={y} value={y}>{y} 年</option>
+                <option key={y} value={y}>{y} {tr.yearUnit}</option>
               ))}
             </select>
           </div>
 
-          {/* 還款方式 */}
+          {/* Repayment Method */}
           <div className="calc-field">
-            <label className="calc-label">還款方式</label>
+            <label className="calc-label">{tr.repayMethod}</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 4 }}>
               {[
-                { value: 'equalPayment', label: '本息均攤（等額本息）', desc: '每月還款額相同，前期利息佔比高' },
-                { value: 'equalPrincipal', label: '本金均攤（等額本金）', desc: '每月本金相同，月付遞減，總利息較少' },
+                { value: 'equalPayment', label: tr.equalPayment, desc: tr.equalPaymentDesc },
+                { value: 'equalPrincipal', label: tr.equalPrincipal, desc: tr.equalPrincipalDesc },
               ].map((opt) => (
                 <label
                   key={opt.value}
@@ -334,21 +336,21 @@ export default function MortgageCalculator() {
             </div>
           </div>
 
-          {/* 寬限期 */}
+          {/* Grace Period */}
           <div className="calc-field">
-            <label className="calc-label">寬限期</label>
+            <label className="calc-label">{tr.gracePeriod}</label>
             <select
               className="calc-select"
               value={gracePeriod}
               onChange={(e) => setGracePeriod(Number(e.target.value))}
             >
               {[0, 1, 2, 3, 5].map((y) => (
-                <option key={y} value={y}>{y === 0 ? '無寬限期' : `${y} 年`}</option>
+                <option key={y} value={y}>{y === 0 ? tr.noGrace : `${y} ${tr.yearUnit}`}</option>
               ))}
             </select>
             {gracePeriod > 0 && (
               <p style={{ fontSize: 11, color: 'var(--color-warning)', marginTop: 6 }}>
-                ⚠️ 寬限期內只付利息，本金未減少，總利息將增加
+                {tr.graceWarning}
               </p>
             )}
           </div>
@@ -360,29 +362,29 @@ export default function MortgageCalculator() {
           {gracePeriod > 0 ? (
             <>
               <div style={{ marginBottom: 24 }}>
-                <div className="result-label">寬限期每月利息</div>
+                <div className="result-label">{tr.graceMonthly}</div>
                 <div className="result-big">{fmtCurrency(Math.round(result.graceMonthly))}</div>
                 <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4 }}>
-                  寬限 {gracePeriod} 年（共 {gracePeriod * 12} 個月）
+                  {tr.graceDuration(gracePeriod)}
                 </div>
               </div>
               <div style={{ marginBottom: 24 }}>
-                <div className="result-label">寬限期後每月還款</div>
+                <div className="result-label">{tr.postGraceMonthly}</div>
                 <div className="result-big">{fmtCurrency(Math.round(result.postGraceMonthly))}</div>
                 {method === 'equalPrincipal' && (
                   <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
-                    ＊本金均攤月付遞減，此為第一個月
+                    {tr.equalPrincipalNote}
                   </div>
                 )}
               </div>
             </>
           ) : (
             <div style={{ marginBottom: 24 }}>
-              <div className="result-label">每月還款金額</div>
+              <div className="result-label">{tr.monthlyPayment}</div>
               <div className="result-big">{fmtCurrency(Math.round(result.monthlyPayment))}</div>
               {method === 'equalPrincipal' && (
                 <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>
-                  ＊本金均攤月付遞減，此為第一個月
+                  {tr.equalPrincipalNote}
                 </div>
               )}
             </div>
@@ -391,34 +393,34 @@ export default function MortgageCalculator() {
           {/* Summary rows */}
           <div style={{ borderTop: '0.5px solid var(--color-border)', paddingTop: 16 }}>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>總還款金額</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.totalPayment}</span>
               <span style={{ fontWeight: 500 }}>{fmtCurrency(Math.round(result.totalPayment))}</span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>總利息支出</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.totalInterest}</span>
               <span style={{ color: 'var(--color-warning)', fontWeight: 500 }}>
                 {fmtCurrency(Math.round(result.totalInterest))}
               </span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>利息佔比</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.interestRatio}</span>
               <span style={{ fontWeight: 500 }}>{result.interestRatio.toFixed(1)}%</span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>貸款金額</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.loanAmountLabel}</span>
               <span>{fmtCurrency(loanWan * 10000)}</span>
             </div>
             <div className="result-row">
-              <span style={{ color: 'var(--color-text-secondary)' }}>年利率 / 年期</span>
-              <span>{annualRate}% / {years} 年</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{tr.rateTermLabel}</span>
+              <span>{annualRate}% / {years} {tr.yearUnit}</span>
             </div>
           </div>
 
           {/* Interest vs Principal bar */}
           <div style={{ marginTop: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--color-text-muted)', marginBottom: 6 }}>
-              <span>本金 {(100 - result.interestRatio).toFixed(1)}%</span>
-              <span>利息 {result.interestRatio.toFixed(1)}%</span>
+              <span>{tr.principalPct((100 - result.interestRatio).toFixed(1) as any)}</span>
+              <span>{tr.interestPct(result.interestRatio.toFixed(1) as any)}</span>
             </div>
             <div style={{ height: 8, background: '#E8DDD0', borderRadius: 4, overflow: 'hidden' }}>
               <div
@@ -438,7 +440,7 @@ export default function MortgageCalculator() {
       {/* ── Chart ── */}
       <div style={{ padding: '32px 32px 0', borderTop: '0.5px solid var(--color-border)' }}>
         <h3 style={{ fontSize: 14, fontWeight: 500, marginBottom: 20, color: 'var(--color-text-primary)' }}>
-          📈 本金 / 利息走勢
+          {tr.chartTitle}
         </h3>
         <div style={{ height: 240 }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -456,7 +458,7 @@ export default function MortgageCalculator() {
               <CartesianGrid strokeDasharray="3 3" stroke="#E8DDD0" />
               <XAxis
                 dataKey="month"
-                tickFormatter={(v) => `${v}月`}
+                tickFormatter={(v) => locale === 'ja' ? `${v}ヶ月` : locale === 'en' ? `M${v}` : `${v}月`}
                 tick={{ fontSize: 11, fill: '#A89A8C' }}
                 tickLine={false}
                 axisLine={{ stroke: '#E8DDD0' }}
@@ -472,8 +474,8 @@ export default function MortgageCalculator() {
                 wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
                 formatter={(value) => <span style={{ color: 'var(--color-text-secondary)' }}>{value}</span>}
               />
-              <Area type="monotone" dataKey="本金" stackId="1" stroke="#E07020" fill="url(#gradPrincipal)" strokeWidth={1.5} />
-              <Area type="monotone" dataKey="利息" stackId="1" stroke="#D8CDBE" fill="url(#gradInterest)" strokeWidth={1.5} />
+              <Area type="monotone" dataKey={tr.chartPrincipal} stackId="1" stroke="#E07020" fill="url(#gradPrincipal)" strokeWidth={1.5} />
+              <Area type="monotone" dataKey={tr.chartInterest} stackId="1" stroke="#D8CDBE" fill="url(#gradInterest)" strokeWidth={1.5} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -489,7 +491,7 @@ export default function MortgageCalculator() {
             if (showSchedule) setShowAllMonths(false);
           }}
         >
-          {showSchedule ? '▲ 收合攤還明細表' : '▼ 查看完整攤還表'}
+          {showSchedule ? tr.hideSchedule : tr.showSchedule}
         </button>
 
         {showSchedule && (
@@ -498,7 +500,7 @@ export default function MortgageCalculator() {
               <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 480, fontSize: 13 }}>
                 <thead>
                   <tr style={{ background: 'var(--color-text-primary)', color: '#fff' }}>
-                    {['月份', '月付額', '本金', '利息', '剩餘本金'].map((h) => (
+                    {[tr.tableMonth, tr.tablePayment, tr.tablePrincipal, tr.tableInterest, tr.tableBalance].map((h) => (
                       <th
                         key={h}
                         style={{
@@ -562,8 +564,8 @@ export default function MortgageCalculator() {
               }}
             >
               {showAllMonths
-                ? '▲ 僅顯示年度摘要'
-                : `▼ 查看全部 ${result.schedule.length} 個月明細`}
+                ? tr.showYearly
+                : tr.showAllMonths(result.schedule.length)}
             </button>
           </>
         )}

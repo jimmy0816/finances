@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { localePath } from '../../../i18n/utils';
+const locale = 'en';
+---
+<BaseLayout title="Mortgage Calculators — Taiwan" description="Taiwan mortgage tools: monthly payment calculator, prepayment analysis, affordability assessment." locale={locale}>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">Mortgage Tools</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Mortgage Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:520px;line-height:1.7;">
+        Three tools to fully understand your mortgage: monthly payments, prepayment benefits, and how much home you can afford.
+      </p>
+    </div>
+  </section>
+
+  <!-- Calculator Cards -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <div class="tool-cards">
+        <a href={localePath(locale, '/mortgage/calculator/')} class="tool-card">
+          <span class="tool-icon">🧮</span>
+          <h3>Monthly Payment Calculator</h3>
+          <p>Enter loan amount, rate, and term. Get monthly payment, total interest, and a full amortization schedule.</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">Fixed Payment</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">Fixed Principal</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">Grace Period</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate Now →</span>
+        </a>
+
+        <a href={localePath(locale, '/mortgage/prepay/')} class="tool-card">
+          <span class="tool-icon">⏩</span>
+          <h3>Prepayment Calculator</h3>
+          <p>See how much interest you save and how many years earlier you pay off with a lump-sum or extra monthly payment.</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">Shorten Term</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">Lower Payment</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate Now →</span>
+        </a>
+
+        <a href={localePath(locale, '/mortgage/affordability/')} class="tool-card">
+          <span class="tool-icon">🏠</span>
+          <h3>Affordability Calculator</h3>
+          <p>Based on income and expenses, calculate your maximum loan and home purchase budget.</p>
+          <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">Max Loan</span>
+            <span style="font-size:10px;background:var(--color-accent-bg);color:var(--color-accent);padding:3px 8px;font-family:var(--font-mono);letter-spacing:1px;">Debt-to-Income</span>
+          </div>
+          <span class="tool-card-link" style="margin-top:20px;">Calculate Now →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">Key Concepts</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;letter-spacing:-0.5px;">3 Things to Know Before Taking a Mortgage</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📐</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Fixed Payment vs. Fixed Principal</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Fixed payment keeps the same monthly amount (more interest upfront). Fixed principal reduces payment each month with lower total interest.
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⏳</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">The Cost of a Grace Period</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Interest-only during grace period feels easier, but principal doesn't decrease — your post-grace payments jump up and total interest increases.
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">💡</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Every 0.1% in Rate Matters</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            On a NT$10M 30-year loan, a 0.1% rate difference changes monthly payment by ~NT$500 and total interest by ~NT$180,000.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
