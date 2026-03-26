@@ -1,0 +1,337 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocale, localePath } from '../../i18n/utils';
+import CompoundInterestCalculator from '../../components/calculators/CompoundInterestCalculator';
+const locale = getLocale(Astro.url);
+---
+<BaseLayout
+  title="複利計算機：你的100萬放10年會變多少？【2026試算】"
+  description="複利計算機免費試算！100萬投資10年、20年、30年後實際金額一次看清楚。含複利公式解說、72法則、定期定額 vs 單筆試算，2026年最新資料。"
+  locale={locale}
+>
+  <!-- Article Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">投資知識</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(28px,4vw,56px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;max-width:700px;">
+        複利計算機：<br/>你的 100 萬放 10 年會變多少？
+      </h1>
+      <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.5);margin-top:12px;">
+        2026 年試算 · 含公式解說 · 實際案例
+      </p>
+    </div>
+  </section>
+
+  <!-- Embedded Calculator -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">互動試算工具</div>
+      <h2 style="font-size:20px;font-weight:400;color:var(--color-text-primary);margin-bottom:32px;">先試算，再閱讀</h2>
+      <CompoundInterestCalculator locale={locale} client:load />
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="max-width:720px;margin:0 auto;">
+
+        <article style="font-size:15px;line-height:1.85;color:var(--color-text-secondary);font-weight:300;">
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:0 0 20px;letter-spacing:-0.3px;">複利是什麼？一個簡單卻顛覆認知的概念</h2>
+
+          <p style="margin-bottom:20px;">
+            複利（Compound Interest）和單利最大的差別，在於利息也會再生利息。你的本金每一期結算後，利息被加回本金，下一期的利息計算基礎就變大了。
+          </p>
+
+          <p style="margin-bottom:20px;">
+            聽起來好像差不多？讓數字說話：
+          </p>
+
+          <div style="background:var(--color-bg);border:0.5px solid var(--color-border);padding:24px;margin-bottom:28px;border-radius:4px;">
+            <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:16px;">單利 vs 複利對比</div>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead>
+                <tr style="background:var(--color-text-primary);color:#fff;">
+                  <th style="padding:10px 12px;text-align:left;font-weight:400;">初始本金</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">10年（單利 7%）</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">10年（複利 7%）</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">100 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">170 萬</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-accent);font-weight:500;">196.7 萬</td>
+                </tr>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">100 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">210 萬（15年）</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-accent);font-weight:500;">275.9 萬（15年）</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;">100 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">240 萬（20年）</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-accent);font-weight:500;">386.9 萬（20年）</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="margin-bottom:28px;">
+            20 年後的差距接近 150 萬——而你什麼都沒多做，只是讓利息也「參與投資」。
+          </p>
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:40px 0 20px;letter-spacing:-0.3px;">複利公式：算清楚每一分錢</h2>
+
+          <p style="margin-bottom:16px;">複利的基本公式為：</p>
+
+          <div style="background:var(--color-dark-bg);padding:24px;margin-bottom:24px;border-radius:4px;font-family:var(--font-mono);font-size:14px;color:#fff;overflow-x:auto;">
+            <p style="margin-bottom:8px;color:var(--color-accent);">/* 僅本金，無定期投入 */</p>
+            <p>FV = P × (1 + r/n)^(n×t)</p>
+            <br/>
+            <p style="color:var(--color-text-muted);font-size:12px;">P = 初始本金</p>
+            <p style="color:var(--color-text-muted);font-size:12px;">r = 年報酬率（小數，如 7% → 0.07）</p>
+            <p style="color:var(--color-text-muted);font-size:12px;">n = 每年複利次數（月複利=12、季=4、年=1）</p>
+            <p style="color:var(--color-text-muted);font-size:12px;">t = 年數</p>
+          </div>
+
+          <p style="margin-bottom:16px;">加入每月定期投入（定期定額）後，計算更複雜，需逐期累積。上方的計算機已幫你處理所有數學，直接輸入條件即可。</p>
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:40px 0 20px;letter-spacing:-0.3px;">100 萬放 10 年：四種情境試算</h2>
+
+          <p style="margin-bottom:20px;">不同年報酬率下，100 萬放 10 年的結果（月複利，不含定期投入）：</p>
+
+          <div style="background:var(--color-bg);border:0.5px solid var(--color-border);padding:24px;margin-bottom:28px;border-radius:4px;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead>
+                <tr style="background:var(--color-text-primary);color:#fff;">
+                  <th style="padding:10px 12px;text-align:left;font-weight:400;">年報酬率</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">10 年後</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">20 年後</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">30 年後</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;font-family:var(--font-mono);">3%（高利活存）</td>
+                  <td style="padding:10px 12px;text-align:right;">134.9 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">181.9 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">245.3 萬</td>
+                </tr>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;font-family:var(--font-mono);">5%（保守型ETF）</td>
+                  <td style="padding:10px 12px;text-align:right;">164.7 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">271.1 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">446.4 萬</td>
+                </tr>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;font-family:var(--font-mono);">7%（股票型基金）</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-accent);font-weight:500;">201.0 萬</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-accent);font-weight:500;">404.1 萬</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-accent);font-weight:500;">811.7 萬</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;font-family:var(--font-mono);">10%（積極成長型）</td>
+                  <td style="padding:10px 12px;text-align:right;">270.7 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">732.8 萬</td>
+                  <td style="padding:10px 12px;text-align:right;">1983.7 萬</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="margin-bottom:28px;">
+            看出差距了嗎？年報酬率從 5% 提升到 7%，30 年後金額幾乎翻了將近一倍（446 萬 vs 812 萬）。這就是報酬率每 1% 的長期威力。
+          </p>
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:40px 0 20px;letter-spacing:-0.3px;">72 法則：最快估算翻倍時間</h2>
+
+          <p style="margin-bottom:16px;">
+            不需要計算機，「72 法則」讓你秒估資產翻倍所需年數：
+          </p>
+
+          <div style="background:var(--color-accent-bg);border-left:3px solid var(--color-accent);padding:20px 24px;margin-bottom:24px;border-radius:0 4px 4px 0;">
+            <p style="font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px;">翻倍年數 ≈ 72 ÷ 年報酬率</p>
+            <p style="font-size:13px;color:var(--color-text-secondary);">
+              年報酬 6% → 72÷6 = 12 年翻倍<br/>
+              年報酬 9% → 72÷9 = 8 年翻倍<br/>
+              年報酬 12% → 72÷12 = 6 年翻倍
+            </p>
+          </div>
+
+          <p style="margin-bottom:28px;">
+            72 法則同樣適用於通膨侵蝕購買力：年通膨 3%，24 年後你的錢購買力只剩一半。這也是為什麼「留在銀行存款」實際上是在慢慢虧損。
+          </p>
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:40px 0 20px;letter-spacing:-0.3px;">定期定額 vs 單筆投入：哪個更強？</h2>
+
+          <p style="margin-bottom:20px;">
+            假設你有 100 萬，還能每月投入 1 萬，年報酬 7%，投資 20 年：
+          </p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;">
+            <div style="background:var(--color-bg);border:0.5px solid var(--color-border);padding:20px;border-radius:4px;">
+              <div style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-muted);margin-bottom:8px;letter-spacing:1px;">單筆 100 萬，不追加</div>
+              <div style="font-size:24px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;">約 404 萬</div>
+              <div style="font-size:12px;color:var(--color-text-muted);">本金 100 萬，利息 304 萬</div>
+            </div>
+            <div style="background:var(--color-accent-bg);border:0.5px solid var(--color-accent);padding:20px;border-radius:4px;">
+              <div style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-muted);margin-bottom:8px;letter-spacing:1px;">100 萬 + 每月 1 萬</div>
+              <div style="font-size:24px;font-weight:500;color:var(--color-accent);margin-bottom:4px;">約 717 萬</div>
+              <div style="font-size:12px;color:var(--color-text-muted);">本金 340 萬，利息 377 萬</div>
+            </div>
+          </div>
+
+          <p style="margin-bottom:20px;">
+            每月多投 1 萬，最終多出 313 萬——而你總共才多投了 240 萬。這多出的 73 萬就是複利讓你「憑空」多拿的。
+          </p>
+
+          <p style="margin-bottom:28px;">
+            定期定額最大的好處不只是錢，而是紀律。市場下跌時你還在買，長期下來平均成本更低，情緒影響也更小。
+          </p>
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:40px 0 20px;letter-spacing:-0.3px;">月複利 vs 年複利：差多少？</h2>
+
+          <p style="margin-bottom:16px;">
+            相同年報酬率下，複利頻率越高，最終金額越大（差距不大，但仍存在）：
+          </p>
+
+          <div style="background:var(--color-bg);border:0.5px solid var(--color-border);padding:24px;margin-bottom:28px;border-radius:4px;">
+            <p style="font-size:12px;font-family:var(--font-mono);color:var(--color-text-muted);margin-bottom:16px;letter-spacing:1px;">100萬、年報酬7%、20年</p>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead>
+                <tr style="background:var(--color-text-primary);color:#fff;">
+                  <th style="padding:10px 12px;text-align:left;font-weight:400;">複利頻率</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">20年後金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">年複利</td>
+                  <td style="padding:10px 12px;text-align:right;">386.9 萬</td>
+                </tr>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">季複利</td>
+                  <td style="padding:10px 12px;text-align:right;">401.0 萬</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;">月複利</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-accent);font-weight:500;">404.0 萬</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="margin-bottom:28px;">
+            月複利比年複利多出約 17 萬（4.4%）。在投資標的選擇上，這個差距通常遠小於手續費或稅負影響，但選擇月配息或月結算的商品時仍有實質意義。
+          </p>
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:40px 0 20px;letter-spacing:-0.3px;">實際投資標的參考年報酬率（2026）</h2>
+
+          <p style="margin-bottom:16px;">
+            試算時不確定要用什麼報酬率？以下是常見標的的歷史平均（僅供參考，過去績效不代表未來）：
+          </p>
+
+          <div style="background:var(--color-bg);border:0.5px solid var(--color-border);padding:0;margin-bottom:28px;border-radius:4px;overflow:hidden;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead>
+                <tr style="background:var(--color-text-primary);color:#fff;">
+                  <th style="padding:10px 12px;text-align:left;font-weight:400;">投資標的</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">參考年報酬</th>
+                  <th style="padding:10px 12px;text-align:right;font-weight:400;">風險</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">高利活存 / 定存</td>
+                  <td style="padding:10px 12px;text-align:right;font-family:var(--font-mono);">1.5–3%</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-success);">極低</td>
+                </tr>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">台灣債券 ETF</td>
+                  <td style="padding:10px 12px;text-align:right;font-family:var(--font-mono);">2–4%</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-success);">低</td>
+                </tr>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">台灣高股息 ETF（0056等）</td>
+                  <td style="padding:10px 12px;text-align:right;font-family:var(--font-mono);">5–8%</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-warning);">中</td>
+                </tr>
+                <tr style="border-bottom:0.5px solid var(--color-border);">
+                  <td style="padding:10px 12px;">台灣 50 ETF（0050）</td>
+                  <td style="padding:10px 12px;text-align:right;font-family:var(--font-mono);">7–10%</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-warning);">中</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;">美國 S&P 500 指數基金</td>
+                  <td style="padding:10px 12px;text-align:right;font-family:var(--font-mono);">8–12%</td>
+                  <td style="padding:10px 12px;text-align:right;color:var(--color-warning);">中高</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="margin-bottom:28px;">
+            ⚠️ 以上數字為歷史參考，未來報酬率可能大幅偏離。投資有風險，本文不構成任何投資建議。
+          </p>
+
+          <h2 style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:40px 0 20px;letter-spacing:-0.3px;">常見問題 FAQ</h2>
+
+          <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:28px;">
+            <details style="border:0.5px solid var(--color-border);padding:16px;border-radius:4px;">
+              <summary style="cursor:pointer;font-weight:500;color:var(--color-text-primary);font-size:14px;">複利計算機和銀行的試算結果差很多？</summary>
+              <p style="font-size:13px;color:var(--color-text-secondary);margin-top:12px;line-height:1.7;">銀行試算通常不含每月定期投入，且可能採用不同的複利頻率。本工具支援月/季/年複利切換，並可模擬每月追加投入，更接近實際投資情境。</p>
+            </details>
+            <details style="border:0.5px solid var(--color-border);padding:16px;border-radius:4px;">
+              <summary style="cursor:pointer;font-weight:500;color:var(--color-text-primary);font-size:14px;">實際投資有扣稅嗎？計算機有含稅嗎？</summary>
+              <p style="font-size:13px;color:var(--color-text-secondary);margin-top:12px;line-height:1.7;">本計算機為稅前試算，不含資本利得稅、股利稅或手續費。台灣目前資本利得稅制尚未全面實施，但股利所得仍有課稅（分離課稅 28% 或合併計算）。實際稅後報酬請依個人情況調整。</p>
+            </details>
+            <details style="border:0.5px solid var(--color-border);padding:16px;border-radius:4px;">
+              <summary style="cursor:pointer;font-weight:500;color:var(--color-text-primary);font-size:14px;">每月投入的金額要從什麼時候開始算？</summary>
+              <p style="font-size:13px;color:var(--color-text-secondary);margin-top:12px;line-height:1.7;">本計算機採期初投入模式——即每個複利期開始時先投入，再計算該期利息。這是最常見的定期定額模擬方式，略偏樂觀（期末投入則稍微保守一些）。</p>
+            </details>
+            <details style="border:0.5px solid var(--color-border);padding:16px;border-radius:4px;">
+              <summary style="cursor:pointer;font-weight:500;color:var(--color-text-primary);font-size:14px;">通膨沒有算進去？</summary>
+              <p style="font-size:13px;color:var(--color-text-secondary);margin-top:12px;line-height:1.7;">對。本工具顯示「名目金額」，未扣除通膨。若要估算「實質購買力」，可以把年報酬率減去預估通膨率（例：報酬 7% - 通膨 2% = 實質報酬 5%）後再試算。</p>
+            </details>
+          </div>
+
+          <div style="background:var(--color-dark-bg);padding:24px;border-radius:4px;margin-bottom:0;">
+            <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7;margin:0;">
+              ⚠️ 本文所有試算數字均為數學模型結果，僅供參考，不構成投資建議。實際投資收益受市場、通膨、稅負、手續費等多種因素影響。投資有風險，請依個人財務狀況謹慎評估。
+            </p>
+          </div>
+
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Tools -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">相關工具</div>
+      <div class="tool-cards">
+        <a href={localePath(locale, '/invest/')} class="tool-card">
+          <span class="tool-icon">📈</span>
+          <h3>複利計算機（互動版）</h3>
+          <p>完整版複利試算工具，支援逐年累積圖表與明細表格。</p>
+          <span class="tool-card-link">立即試算 →</span>
+        </a>
+        <a href={localePath(locale, '/retirement/')} class="tool-card">
+          <span class="tool-icon">🌅</span>
+          <h3>退休金試算</h3>
+          <p>結合複利試算，計算退休金缺口與每月需存金額。</p>
+          <span class="tool-card-link">立即試算 →</span>
+        </a>
+        <a href={localePath(locale, '/mortgage/calculator/')} class="tool-card">
+          <span class="tool-icon">🏠</span>
+          <h3>房貸試算</h3>
+          <p>買房 vs 繼續投資？先把房貸數字算清楚再決定。</p>
+          <span class="tool-card-link">立即試算 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

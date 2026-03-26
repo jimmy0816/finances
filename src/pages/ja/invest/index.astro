@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { localePath } from '../../../i18n/utils';
+import CompoundInterestCalculator from '../../../components/calculators/CompoundInterestCalculator';
+const locale = 'ja';
+---
+<BaseLayout
+  title="複利計算機 — 投資シミュレーション"
+  description="複利計算機：元本・毎月積立額・年利回りを入力して10〜30年の資産成長をシミュレーション。月次・四半期・年次複利に対応。"
+  locale={locale}
+>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">投資シミュレーション</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Invest Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:520px;line-height:1.7;">
+        複利は時間の最も強力な武器。元本と積立額を入力して、10年・20年後の本当の数字を確認しましょう。
+      </p>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <CompoundInterestCalculator locale={locale} client:load />
+    </div>
+  </section>
+
+  <!-- Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">基本知識</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;letter-spacing:-0.5px;">複利が重要な理由</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📐</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">72の法則</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            72を年利回りで割ると資産が2倍になる年数の目安。年利7%なら約10年で2倍、年利10%なら約7年で2倍になります。
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⏳</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">時間が最大の優位性</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            NT$100万を年利7%で30年運用すると約NT$761万になります。最初はゆっくり、最後の数年で爆発的に増えるのが複利の特徴。
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">💡</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">積立で効果倍増</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            毎月NT$3万を20年積立すると元本合計NT$720万。年利7%では約NT$1,800万に成長。定期積立が複利効果をさらに高めます。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">関連ツール</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:32px;">その他のツール</h2>
+      <div class="tool-cards">
+        <a href={localePath(locale, '/invest/compound-interest/')} class="tool-card">
+          <span class="tool-icon">📈</span>
+          <h3>複利計算完全ガイド</h3>
+          <p>NT$100万を10年放置するといくらになる？複利の公式と実際の事例をわかりやすく解説。</p>
+          <span class="tool-card-link">記事を読む →</span>
+        </a>
+        <a href={localePath(locale, '/retirement/')} class="tool-card">
+          <span class="tool-icon">🌅</span>
+          <h3>老後資金計算</h3>
+          <p>退職目標を設定し、毎月いくら積立が必要か計算します。</p>
+          <span class="tool-card-link">今すぐ計算 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

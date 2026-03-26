@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocale, localePath } from '../../i18n/utils';
+import CompoundInterestCalculator from '../../components/calculators/CompoundInterestCalculator';
+const locale = getLocale(Astro.url);
+---
+<BaseLayout
+  title="複利計算機 — 投資試算工具"
+  description="複利計算機：輸入本金、每月定投、年報酬率，試算10年20年後的資產規模。支援月複利/季複利/年複利，逐年堆疊圖清楚顯示本金 vs 利息增長。"
+  locale={locale}
+>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">投資試算工具</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Invest Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:520px;line-height:1.7;">
+        複利是時間最強大的武器。輸入本金與定期投入，算清楚 10 年、20 年後的真實數字。
+      </p>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <CompoundInterestCalculator locale={locale} client:load />
+    </div>
+  </section>
+
+  <!-- Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">複利觀念</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;letter-spacing:-0.5px;">為什麼複利這麼重要？</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📐</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">72 法則</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            用 72 除以年報酬率，就是資產翻倍所需年數。年報酬 7%，約 10 年翻一倍；年報酬 10%，約 7 年翻倍。
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⏳</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">時間是最大優勢</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            100 萬放 30 年（年報酬 7%）會變成約 761 萬。前半段增長慢，後半段加速——複利的威力在最後幾年才真正爆發。
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">💡</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">定期定額放大效果</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            每月投入 3 萬（3 萬元），20 年後累積本金 720 萬，若年報酬 7% 實際可達約 1,800 萬。定期投入讓複利效果倍增。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Articles -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">延伸閱讀</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:32px;">複利相關文章</h2>
+      <div class="tool-cards">
+        <a href={localePath(locale, '/invest/compound-interest/')} class="tool-card">
+          <span class="tool-icon">📈</span>
+          <h3>複利計算機完整指南</h3>
+          <p>你的 100 萬放 10 年會變多少？複利公式解釋、實際案例，讓你真正看懂複利的力量。</p>
+          <span class="tool-card-link">閱讀文章 →</span>
+        </a>
+        <a href={localePath(locale, '/retirement/')} class="tool-card">
+          <span class="tool-icon">🌅</span>
+          <h3>退休金試算</h3>
+          <p>設定退休目標，計算每月需存多少錢，搭配複利試算找出你的最佳存錢路徑。</p>
+          <span class="tool-card-link">立即試算 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

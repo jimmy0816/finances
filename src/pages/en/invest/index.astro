@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { localePath } from '../../../i18n/utils';
+import CompoundInterestCalculator from '../../../components/calculators/CompoundInterestCalculator';
+const locale = 'en';
+---
+<BaseLayout
+  title="Compound Interest Calculator — Investment Tools"
+  description="Compound interest calculator: enter principal, monthly contributions, and annual return to simulate asset growth over 10–30 years. Monthly, quarterly, or annual compounding with stacked area chart."
+  locale={locale}
+>
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-accent);margin-bottom:16px;">Investment Tools</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,64px);font-weight:700;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;">Invest Tools</h1>
+      <p style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.6);max-width:520px;line-height:1.7;">
+        Compound interest is time's most powerful force. Enter your principal and contributions to see the real numbers 10, 20, or 30 years from now.
+      </p>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <CompoundInterestCalculator locale={locale} client:load />
+    </div>
+  </section>
+
+  <!-- Concepts -->
+  <section style="padding:64px 0;background:var(--color-bg-card);border-top:0.5px solid var(--color-border);border-bottom:0.5px solid var(--color-border);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">Key Concepts</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:40px;letter-spacing:-0.5px;">Why Compound Interest Matters</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border:0.5px solid var(--color-border);">
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">📐</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">The Rule of 72</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Divide 72 by your annual return to estimate how many years it takes to double your money. At 7%, it doubles in ~10 years. At 10%, just ~7 years.
+          </p>
+        </div>
+        <div style="padding:28px 24px;border-right:0.5px solid var(--color-border);background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">⏳</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Time is Your Biggest Edge</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            NT$1M invested for 30 years at 7% annual return becomes ~NT$7.6M. The growth is slow at first — but explosive in the final years.
+          </p>
+        </div>
+        <div style="padding:28px 24px;background:var(--color-bg-card);">
+          <div style="font-size:24px;margin-bottom:12px;">💡</div>
+          <h3 style="font-size:15px;font-weight:500;margin-bottom:8px;">Regular Contributions Multiply the Effect</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);font-weight:300;line-height:1.7;">
+            Adding NT$30K/month for 20 years gives you NT$7.2M in total principal. At 7% annual return, that grows to ~NT$18M. Consistent investing changes everything.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related -->
+  <section style="padding:64px 0;background:var(--color-bg);">
+    <div class="container">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:24px;">Related</div>
+      <h2 style="font-size:22px;font-weight:400;color:var(--color-text-primary);margin-bottom:32px;">More Tools</h2>
+      <div class="tool-cards">
+        <a href={localePath(locale, '/invest/compound-interest/')} class="tool-card">
+          <span class="tool-icon">📈</span>
+          <h3>Compound Interest Guide</h3>
+          <p>What does NT$1M become after 10 years? Full explanation of compound interest formula with real-world examples.</p>
+          <span class="tool-card-link">Read Article →</span>
+        </a>
+        <a href={localePath(locale, '/retirement/')} class="tool-card">
+          <span class="tool-icon">🌅</span>
+          <h3>Retirement Planner</h3>
+          <p>Set your retirement target and calculate how much you need to save each month to get there.</p>
+          <span class="tool-card-link">Calculate Now →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

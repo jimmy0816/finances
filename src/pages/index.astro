@@ -55,6 +55,14 @@ const locale = getLocale(Astro.url);
           <span class="tool-card-link">開始試算 →</span>
         </a>
 
+        <!-- 投資試算 -->
+        <a href={localePath(locale, '/invest/')} class="tool-card">
+          <span class="tool-icon">📈</span>
+          <h3>{t(locale, 'nav.invest')}</h3>
+          <p>複利計算機：輸入本金、每月定投與年報酬率，試算 10 年、20 年後的資產規模，本金 vs 利息清楚呈現。</p>
+          <span class="tool-card-link">開始試算 →</span>
+        </a>
+
       </div>
     </div>
   </section>
